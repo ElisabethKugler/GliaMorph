@@ -13,6 +13,7 @@ All rights reserved.
 (4) performs x-y reduction
 (5) performs reduction in z 
 
+GNU General Public License v2.0
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 // 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 // 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
@@ -61,8 +62,8 @@ zDirMIPs = zDir + "/zDirMIPs/"; 							// output folder
 File.makeDirectory(zDirMIPs);
 
 // create file for output measurements of retina height 
-f = File.open(path + "RetinaHeight.txt");
-print(f, "Filename" + " \t"  + "RetinaHeight");
+fileOverview = File.open(path + "MGHeight.txt");
+print(fileOverview, "Filename" + " \t"  + "MGHeight [um]");
 
 ///// iterate through images in the folder calling xyReduction and zReduction functions
 for (i=0; i< sortedFilelist.length; i++) {   
@@ -167,7 +168,8 @@ function xyReduction(title) {
 
 	remainingImg = (height - MeasY) + MeasLength;
 
-	print(f, title + " \t" + MeasLengthum);
+	print(fileOverview, sortedFilelist[i] + " \t" + MeasLengthum);
+
 
 	// check for length of box in vx
 	if (remainingImg >= sigma){
