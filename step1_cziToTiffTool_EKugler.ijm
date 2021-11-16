@@ -51,8 +51,11 @@ for (i=0; i< sortedFilelist.length; i++) {
 	saveAs("Tiff", OutputDirMIPs + "MAX_" + sortedFilelist[i]);
 
 	// make composite to show all colours in jpeg MIP
-	run("Channels Tool...");
-	Stack.setDisplayMode("composite");
+	getDimensions(width, height, channels, slices, frames);
+	if (channels != 1) {
+		run("Channels Tool...");
+		Stack.setDisplayMode("composite");
+	}
 	// save MIP
 	run("Enhance Contrast", "saturated=0.35");
 	saveAs("Jpeg", OutputDirMIPs + "MAX_jpeg" + sortedFilelist[i]);
