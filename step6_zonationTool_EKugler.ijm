@@ -46,7 +46,7 @@ if (IntPlot==choices[0]){ // yes
 	File.makeDirectory(ZonationToolDir);
 	
 	f = File.open(ZonationToolDir + "ZonationResults.txt");
-	print(f, "Filename" + " \t"  + "ImageHeight" + " \t" + "RetinaHeighWOSigma");
+	print(f, "Filename" + " \t"  + "ImageHeight" + " \t" + "LengthOfROI_HeightWOSigma");
 
 	setBatchMode(true); //batch mode on
 	print("Input Directory: " + path);
