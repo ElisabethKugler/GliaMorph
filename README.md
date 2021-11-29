@@ -16,7 +16,7 @@ BSD 3-Clause License
 Copyright (c) [2021], [Elisabeth C. Kugler, University College London, United Kingdom]
 All rights reserved.
 
-## We always welcome contributions and feedback
+## Contributions and feedback
 This GitHub repository will be maintained until at least 2023 by Elisabeth Kugler. However, as it is meant to be used and useful, the code and tools are meant to change and be adaptable. Please help us make the most out of #GliaMorph:
 
 - Raise issues in Github (as described by Robert Haase: https://focalplane.biologists.com/2021/09/04/collaborative-bio-image-analysis-script-editing-with-git/).
