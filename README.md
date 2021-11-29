@@ -9,14 +9,23 @@ Step-by-step protocol: XXX
 
 Author: Elisabeth Kugler 2021
 
-Contact: kugler.elisabeth@gmail.com
+Contact: kugler.elisabeth[at]gmail.com
 
 BSD 3-Clause License
 
 Copyright (c) [2021], [Elisabeth C. Kugler, University College London, United Kingdom]
 All rights reserved.
 
-## Overview
+## We always welcome contributions and feedback
+Please raise issues in Github (as described by Robert Haase: https://focalplane.biologists.com/2021/09/04/collaborative-bio-image-analysis-script-editing-with-git/) 
+pr contribute to the discussion (https://github.com/ElisabethKugler/GliaMorph/discussions). 
+As always, use the image.sc forum for discussions / questions / how-to's (https://forum.image.sc/)
+
+Please use the hashtag #GliaMorph (especially on social media), so we can communicate effectively around the tool.
+
+For specific questions, please contact kugler.elisabeth[at]gmail.com.
+
+## Overview of Steps
 
 - **step1_cziToTiffTool_EKugler.ijm**: Macro for czi to tiff conversion
 
@@ -35,3 +44,4 @@ All rights reserved.
 - **step7_SegmentationTool_EKugler.ijm**: Segmentation of MG cells
 
 - **step8_QuantificationTool_EKugler.ijm**: Quantification of MG features in segmented images
+
