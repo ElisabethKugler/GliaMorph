@@ -47,6 +47,10 @@ setBatchMode(true); //batch mode on
 
 print("Input Directory: " + path);
 
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
+
 //open ROI set 
 roiManager("Open", path + "RoiSetLine.zip");
 n = roiManager("count");
@@ -88,6 +92,9 @@ print("Output Directory: " + zDir);
 run("Collect Garbage");
 setBatchMode(false); //exit batch mode
 
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
 
 // show message when Macro is finished
 showMessage("Macro is finished"); 

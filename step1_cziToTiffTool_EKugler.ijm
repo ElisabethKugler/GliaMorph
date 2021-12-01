@@ -21,6 +21,10 @@ path = getDirectory("Input Folder");
 filelist = getFileList(path); 
 sortedFilelist = Array.sort(filelist);
 
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
+
 ///// create output folder
 OutputDir = path + "/tiff/"; 
 File.makeDirectory(OutputDir);
@@ -73,6 +77,10 @@ print("Output Directory: " + OutputDir);
 
 run("Collect Garbage");
 setBatchMode(false); //exit batch mode
+
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
 
 // show message when Macro is finished
 showMessage("Macro is finished"); 

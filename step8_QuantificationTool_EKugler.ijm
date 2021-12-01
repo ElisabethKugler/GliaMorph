@@ -49,6 +49,10 @@ print(fileOverview, "name" + "\t" + "volume [um3]" + "\t" + "PercCov [%]" + "\t"
 
 print("Input Directory: " + path); // which input directory was selected
 
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
+
 // set colours and measurements
 setBackgroundColor(0, 0, 0);
 setForegroundColor(255, 255, 255);
@@ -85,6 +89,10 @@ saveAs("Results", path + "Skeleton Stats.csv");
 run("Close All");
 
 run("Collect Garbage");
+
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
 
 showMessage("Macro is finished"); // show message when Macro is finished
 // .. Macro finished .. // 

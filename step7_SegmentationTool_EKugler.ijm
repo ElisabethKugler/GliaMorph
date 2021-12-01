@@ -33,9 +33,12 @@ File.makeDirectory(OutputDirMIPs);
 
 print("Input Directory: " + path);
 
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
+
 setBackgroundColor(0, 0, 0);
 setForegroundColor(255, 255, 255);
-
 
 ///// open images from inputfolder
 for (i=0; i< sortedFilelist.length; i++) {   
@@ -92,6 +95,10 @@ run("Close All");
 print("Output Directory: " + OutputDir);
 
 run("Collect Garbage");
+
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
 
 // show message when Macro is finished
 showMessage("Macro is finished"); 

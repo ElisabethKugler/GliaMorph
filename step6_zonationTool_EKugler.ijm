@@ -36,6 +36,10 @@ setBackgroundColor(255, 255, 255);
 
 run("Set Measurements...", "area mean standard min perimeter bounding fit area_fraction stack redirect=None decimal=3");
 
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
+
 if (IntPlot==choices[0]){ // yes
 	///// Directories and folders
 	path = getDirectory("Input Folder");
@@ -103,6 +107,10 @@ print("Output Directory: " + ZonationToolDir);
 
 run("Collect Garbage");
 setBatchMode(false); //exit batch mode
+
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
 
 run("Close All");
 showMessage("Macro is finished"); 

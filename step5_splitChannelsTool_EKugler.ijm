@@ -32,6 +32,10 @@ setBatchMode(true); //batch mode on
 
 print("Input Directory: " + path);
 
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
+
 if(NrC==choices[0]){ // one channel
 	channels=1;
 }
@@ -76,6 +80,10 @@ run("Close All");
 
 run("Collect Garbage");
 setBatchMode(false); //exit batch mode
+
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
 
 // show message when Macro is finished
 showMessage("Macro is finished");

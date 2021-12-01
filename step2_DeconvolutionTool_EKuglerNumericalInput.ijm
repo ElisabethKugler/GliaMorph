@@ -48,6 +48,10 @@ sortedFilelist = Array.sort(filelist);
 
 print("Input Directory: " + path);
 
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
+
 ///// which channels and signal /////
 cNrA = 0; cNrB = 0; cNrC = 0; cNrD = 0; 
 if (channel_1 != 0){ 
@@ -290,6 +294,9 @@ function confocal(title) {
 		print("Confocal pre-processing done " + sortedFilelist[i]);
 }
 
+// runTime check
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+print(hour + ":" + minute + ":" + second);
 
 run("Close All");
 showMessage("Analysis finished");
