@@ -4,9 +4,9 @@ GliaMorph Toolkit to process and analyse Müller glia morphology (implemented as
 BioRxiv manuscript - GliaMorph biological application: XXX
 
 BioRxiv manuscript - step-by-step protocol: XXX <br/>
-Example Data: **Data Link**:  **DATA DOI**: 
+Example Data: **Data Link**: https://zenodo.org/record/5747597 **DATA DOI**: 10.5281/zenodo.5747597
 
-Minimum Example Data 29112021: **Data Link**: https://zenodo.org/record/5735442#.YaUPG9DP02w **DATA DOI**: 10.5281/zenodo.5735442
+Minimum Example Data 29112021: **Data Link**: https://zenodo.org/record/5735442 **DATA DOI**: 10.5281/zenodo.5735442
 
 **Code Author**: Elisabeth Kugler <br/>
 **Project Leads**: Elisabeth Kugler and Ryan MacDonald <br/>
