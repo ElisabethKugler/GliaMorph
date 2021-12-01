@@ -1,27 +1,28 @@
-# GliaMorph
-GliaMorph Toolkit to process and analyse Muller glia morphology
+# GliaMorph Introduction
+GliaMorph Toolkit to process and analyse Müller glia morphology (implemented as Fiji Macros to allow modular application).
 
-Implemented as Fiji Macros
+BioRxiv manuscript - GliaMorph biological application: XXX
 
-Publication: XXX
+BioRxiv manuscript - step-by-step protocol: XXX <br/>
+Example Data: **Data Link**:  **DATA DOI**: 
 
-Step-by-step protocol: XXX
+Minimum Example Data 29112021: **Data Link**: https://zenodo.org/record/5735442#.YaUPG9DP02w **DATA DOI**: 10.5281/zenodo.5735442
 
-Author: Elisabeth Kugler 2021
+**Code Author**: Elisabeth Kugler <br/>
+**Project Leads**: Elisabeth Kugler and Ryan MacDonald <br/>
+**Project Contributors**: Eva-Maria Breitenbach (tester), Alicia Carrington (data and tester), Isabel Bravo (data and tester), Alessandro Felder (code advice), and Robert Haase (code advice). <br/>
+**Contact**: kugler.elisabeth[at]gmail.com<br/>
 
-Contact: kugler.elisabeth[at]gmail.com
-
-BSD 3-Clause License
-
-Copyright (c) [2021], [Elisabeth C. Kugler, University College London, United Kingdom]
+BSD 3-Clause License <br/>
+Copyright (c) [2021], [Elisabeth C. Kugler, University College London, United Kingdom] <br/>
 All rights reserved.
 
-## Contributions and feedback
-This GitHub repository will be maintained until at least 2023 by Elisabeth Kugler. However, as it is meant to be used and useful, the code and tools are meant to change and be adaptable. Please help us make the most out of #GliaMorph:
+## Contributions and Feedback
+This GitHub repository will be maintained until at least 2023 by Elisabeth Kugler. However, as #GliaMorph tools are meant to be used and useful, the code and tools are meant to change and be adaptable. Please help us make the most out of #GliaMorph:
 
 - Raise issues in Github (as described by Robert Haase: https://focalplane.biologists.com/2021/09/04/collaborative-bio-image-analysis-script-editing-with-git/).
 - Contribute to the discussion (https://github.com/ElisabethKugler/GliaMorph/discussions). 
-- As always, use the image.sc forum for discussions / questions / how-to's (https://forum.image.sc/)
+- Use the image.sc forum for discussions / questions / how-to's (https://forum.image.sc/)
 - Please use the hashtag #GliaMorph (especially on social media), so we can communicate effectively around the tool.
 - For specific questions, please contact kugler.elisabeth[at]gmail.com.
 
