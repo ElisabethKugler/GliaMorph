@@ -101,7 +101,6 @@ close("*");
 	print("Zonation analysis not selected.");
 }
 
-
 close("Results");
 print("Output Directory: " + ZonationToolDir);
 
@@ -125,16 +124,22 @@ function plotIntensity(title) {
 	getDimensions(width, height, channels, slices, frames);
 	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
 
-	BlurFactor = height / 40;
+	BlurFactor = round(height / 40); // 13122021
 	
 	// reduce in z-axis
 	run("Z Project...", "projection=[Max Intensity]");
+	saveAs("Tiff", ZonationToolDir + "IntermZonation_" + img); // 1D representation of 3D data; intensity showing distribution of lamination
+	wait(1000);
+	close("IntermZonation_" + img);
+	open(ZonationToolDir + "IntermZonation_" + img);
+	
 	// reduce in x-axis
 	run("Reslice [/]...", "output=1.000 start=Left");
 	run("Z Project...", "projection=[Max Intensity]");
 	run("Enhance Contrast", "saturated=0.35");
 	run("Fire");
 	saveAs("Tiff", ZonationToolDir + "Zonation_" + img); // 1D representation of 3D data; intensity showing distribution of lamination
+
 	run("Gaussian Blur...", "sigma=" + BlurFactor);
 	// scale image width to 1920 - so different profiles are comparable -- 17112020
 	if (ImgNorm==choices[0]){ // yes
