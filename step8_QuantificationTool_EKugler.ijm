@@ -260,6 +260,10 @@ function plotIntensity(title, outName, Filter1, Filter2) {
 	// -- dimensionality reduction
 	// reduce in z-axis
 	run("Z Project...", "projection=[" + Filter1 + " Intensity]"); // need to be Avg not Max bc binary/TH image
+	saveAs("Tiff", outName + "intermZonation_" + sortedFilelist[i]); // 1D representation of 3D data; intensity showing distribution of lamination
+	close("IntermZonation_" + sortedFilelist[i]);
+	open(outName + "IntermZonation_" + sortedFilelist[i]);
+	
 	// reduce in x-axis
 	run("Reslice [/]...", "output=1.000 start=Left");
 	run("Z Project...", "projection=[" + Filter2 + " Intensity]");
