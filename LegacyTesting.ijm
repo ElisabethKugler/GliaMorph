@@ -77,9 +77,9 @@ function LegacyTesting(orig,adap) {
 	
 	// Coloured overlap
 	selectWindow(sortedFilelistO[i]);
-	run("Green"); // origina
+	run("Green"); // original
 	selectWindow(sortedFilelistA[k]);
-	run("Magenta"); // adatped
+	run("Magenta"); // adapted
 	run("Merge Channels...", "c1=[" + sortedFilelistO[i] + "] c2=[" + sortedFilelistA[k] + "] create");
 	
 	saveAs("Tiff", OutputDir + "Overlap_" + sortedFilelistO[i]);
