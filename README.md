@@ -20,7 +20,7 @@ All rights reserved.
 ## Contributions and Feedback
 This GitHub repository will be maintained until at least 2023 by Elisabeth Kugler. However, as #GliaMorph tools are meant to be used and useful, the code and tools are meant to change and be adaptable. Please help us make the most out of #GliaMorph:
 
-- Raise issues in Github (as described by Robert Haase: https://focalplane.biologists.com/2021/09/04/collaborative-bio-image-analysis-script-editing-with-git/).
+- Raise issues for improvements and create pull requests for code adaptions in Github (as described by Robert Haase: https://focalplane.biologists.com/2021/09/04/collaborative-bio-image-analysis-script-editing-with-git/).
 - Contribute to the discussion (https://github.com/ElisabethKugler/GliaMorph/discussions). 
 - Use the image.sc forum for discussions / questions / how-to's (https://forum.image.sc/)
 - Please use the hashtag #GliaMorph (especially on social media), so we can communicate effectively around the tool.
