@@ -10,7 +10,7 @@ Minimum Example Data 29112021: **Data Link**: https://zenodo.org/record/5735442 
 
 **Code Author**: Elisabeth Kugler <br/>
 **Project Leads**: Elisabeth Kugler and Ryan MacDonald <br/>
-**Project Contributors**: Eva-Maria Breitenbach (tester), Alicia Carrington (data and tester), Isabel Bravo (data and tester), Alessandro Felder (code advice), and Robert Haase (code advice). <br/>
+**Project Contributors**: Eva-Maria Breitenbach (tester), Alicia Carrington (data and tester), Isabel Bravo (data and tester), Cyril Eleftheriou (data and tester), Alessandro Felder (code advice), and Robert Haase (code advice). <br/>
 **Contact**: kugler.elisabeth[at]gmail.com<br/>
 
 BSD 3-Clause License <br/>
