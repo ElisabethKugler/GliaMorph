@@ -49,9 +49,16 @@ for (i=0; i< sortedFilelist.length; i++) {
 		if (RotC == RotChoice[1]) { // right (clockwise)
 			run("Rotate 90 Degrees Right");
 			saveAs("Tiff", outputFolder + "rot_" + sortedFilelist[i]); 
+			
+			run("Z Project...", "projection=[Max Intensity]");
+			saveAs("Tiff", outputFolder + "MIP-" + sortedFilelist[i]); 
+			
 		}else if (RotC == RotChoice[2]){ // left (anti-clockwise)
 			run("Rotate 90 Degrees Left");
 			saveAs("Tiff", outputFolder + "rot_" + sortedFilelist[i]); 
+			
+			run("Z Project...", "projection=[Max Intensity]");
+			saveAs("Tiff", outputFolder + "MIP-" + sortedFilelist[i]); 
 		}else{ // no rotation
 			print("No rotation selected");
 			exit;
