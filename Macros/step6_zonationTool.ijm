@@ -86,8 +86,6 @@ if (IntPlot==choices[0]){ // yes
 			// CLAHE
 			run("Enhance Contrast...", "saturated=0.3 normalize process_all");
 					
-			run("Set Measurements...", "area mean standard min perimeter bounding fit area_fraction stack redirect=None decimal=3");
-			
 			plotIntensity(sortedFilelist[i]);
 			
 			wait(1000);
