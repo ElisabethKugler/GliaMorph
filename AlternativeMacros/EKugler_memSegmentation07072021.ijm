@@ -4,7 +4,7 @@ filelist = getFileList(path);
 sortedFilelist = Array.sort(filelist);
 
 ///// create output folder
-OutputDir = path + "/TH_mem/"; 
+OutputDir = path + "/TH_29072021v4/"; 
 File.makeDirectory(OutputDir);
 
 OutputDirMIPs = OutputDir + "/MIPs/"; 
@@ -47,7 +47,6 @@ for (i=0; i< sortedFilelist.length; i++) {
 	run("Median 3D...", "x=2 y=2 z=2");
 	wait(2000);
 	
-	run("Subtract Background...", "rolling=50 stack"); // 06012021
 	// segmentation
 	setSlice(halfPos);
 //	setThreshold(125, 255);
