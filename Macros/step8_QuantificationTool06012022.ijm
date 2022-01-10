@@ -94,7 +94,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 	column_label = imgName;
 	
 	// plot texture segmented/TH image
-	plotIntensity(sortedFilelist[i], outZone, "Average", "Average"); // filename, inputFolder, outputFolder
+	plotIntensity(sortedFilelist[i], OutputDirEDM, "Average", "Average"); // filename, inputFolder, outputFolder
 	
 	// plot texture of skeletonized image	
 	open(OutputDirSkel + "Skel_" + sortedFilelist[i]);
