@@ -72,11 +72,6 @@ for (i=0; i< sortedFilelist.length; i++) {
 	print("processing ... " + sortedFilelist[i]);
 
 	open(path + sortedFilelist[i]);
-
-	imgName=getTitle();
-	shortTitle = replace(imgName, ".tif", "");
-	column_label = imgName;
-	
 	Quantification(sortedFilelist[i]); // call function quantification
 	
 	close("*");
@@ -87,18 +82,26 @@ selectWindow("Skeleton Stats");
 saveAs("Results", path + "Skeleton Stats.csv");
 close("Results");
 
+
 // 10012022 - try zonationTool TH and skel outside first for loop to see if that fixes issue with overwriting and actually appends zonationTool results
 counter = 0;
 for (i=0; i< sortedFilelist.length; i++) {
 	// open TH image
 	open(path + sortedFilelist[i]);
+	
+	imgName=getTitle();
+	shortTitle = replace(imgName, ".tif", "");
+	column_label = imgName;
+	
 	// plot texture segmented/TH image
 	plotIntensity(sortedFilelist[i], outZone, "Average", "Average"); // filename, inputFolder, outputFolder
-	// plot texture of skeletonized image
+	
+	// plot texture of skeletonized image	
 	open(OutputDirSkel + "Skel_" + sortedFilelist[i]);
 	selectWindow("Skel_" + sortedFilelist[i]);
 	plotIntensity("Skel_" + sortedFilelist[i], OutputDirSkel, "Max", "Average"); // filename, inputFolder, outputFolder
-
+	close("*");
+	
 	counter++;
 }
 
@@ -268,19 +271,23 @@ function NucleiAnalysis(title){
 
 function plotIntensity(title, outName, Filter1, Filter2) { 
 ///// function to collapse 3D stack into 1D vector for texture analysis ///// 
+	run("8-bit");
+	
 	// get img and vx dimensions
 	getDimensions(width, height, channels, slices, frames);
 	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
-	
-	run("8-bit");
-	
+		
 	// -- dimensionality reduction
 	// reduce in z-axis
 	run("Z Project...", "projection=[" + Filter1 + " Intensity]"); // need to be Avg not Max bc binary/TH image
+
+	// uncomment the next 4 lines if working with resliced data
+/*
 	saveAs("Tiff", outName + "intermZonation_" + sortedFilelist[i]); 
 	wait(1000);
 	close("IntermZonation_" + sortedFilelist[i]); // close and open as reslicing can impact this 
 	open(outName + "IntermZonation_" + sortedFilelist[i]);
+*/
 	
 	// reduce in x-axis
 	run("Reslice [/]...", "output=1.000 start=Left"); // reslice 2D-MIP to get 1D-vector
@@ -300,8 +307,8 @@ function plotIntensity(title, outName, Filter1, Filter2) {
 	profile = getProfile(); 
 	
 	// write profile into Results table and save table
-	for (j=0; j<profile.length; j++){ // next 3 lines from https://imagej.nih.gov/ij/macros/StackProfileData.txt
-	    setResult(column_label, j, profile[j]);
+	for (i=0; i<profile.length; i++){ // from https://imagej.nih.gov/ij/macros/StackProfileData.txt
+	    setResult(column_label, i, profile[i]);
 	}
 	updateResults();
 	
