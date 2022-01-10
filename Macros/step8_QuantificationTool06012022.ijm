@@ -85,6 +85,23 @@ for (i=0; i< sortedFilelist.length; i++) {
 
 selectWindow("Skeleton Stats");
 saveAs("Results", path + "Skeleton Stats.csv");
+close("Results");
+
+// 10012022 - try zonationTool TH and skel outside first for loop to see if that fixes issue with overwriting and actually appends zonationTool results
+counter = 0;
+for (i=0; i< sortedFilelist.length; i++) {
+	// open TH image
+	open(path + sortedFilelist[i]);
+	// plot texture segmented/TH image
+	plotIntensity(sortedFilelist[i], outZone, "Average", "Average"); // filename, inputFolder, outputFolder
+	// plot texture of skeletonized image
+	open(OutputDirSkel + "Skel_" + sortedFilelist[i]);
+	selectWindow("Skel_" + sortedFilelist[i]);
+	plotIntensity("Skel_" + sortedFilelist[i], OutputDirSkel, "Max", "Average"); // filename, inputFolder, outputFolder
+
+	counter++;
+}
+
 
 run("Close All");
 
@@ -106,8 +123,8 @@ function Quantification(title){
 
 	//close("Results"); // test 06012022
 	// plot texture segmented image
-	plotIntensity(sortedFilelist[i], outZone, "Average", "Average"); // filename, inputFolder, outputFolder
-	wait(1000);
+//	plotIntensity(sortedFilelist[i], outZone, "Average", "Average"); // filename, inputFolder, outputFolder
+	//wait(1000);
 
 	selectWindow(sortedFilelist[i]);
 	rename("img");
@@ -169,8 +186,8 @@ function Quantification(title){
 	// apicobasal texture analysis Skeleton
 	selectWindow("Skel_" + sortedFilelist[i]);
 	close("Results");
-	plotIntensity("Skel_" + sortedFilelist[i], OutputDirSkel, "Max", "Average"); // filename, inputFolder, outputFolder
-	wait(1000);
+//	plotIntensity("Skel_" + sortedFilelist[i], OutputDirSkel, "Max", "Average"); // filename, inputFolder, outputFolder
+//	wait(1000);
 	
 	selectWindow("Skel_" + sortedFilelist[i]);
 	
@@ -260,12 +277,13 @@ function plotIntensity(title, outName, Filter1, Filter2) {
 	// -- dimensionality reduction
 	// reduce in z-axis
 	run("Z Project...", "projection=[" + Filter1 + " Intensity]"); // need to be Avg not Max bc binary/TH image
-	saveAs("Tiff", outName + "intermZonation_" + sortedFilelist[i]); // 1D representation of 3D data; intensity showing distribution of lamination
-	close("IntermZonation_" + sortedFilelist[i]);
+	saveAs("Tiff", outName + "intermZonation_" + sortedFilelist[i]); 
+	wait(1000);
+	close("IntermZonation_" + sortedFilelist[i]); // close and open as reslicing can impact this 
 	open(outName + "IntermZonation_" + sortedFilelist[i]);
 	
 	// reduce in x-axis
-	run("Reslice [/]...", "output=1.000 start=Left");
+	run("Reslice [/]...", "output=1.000 start=Left"); // reslice 2D-MIP to get 1D-vector
 	run("Z Project...", "projection=[" + Filter2 + " Intensity]");
 	run("Enhance Contrast", "saturated=0.35");
 	run("Fire");
@@ -286,6 +304,7 @@ function plotIntensity(title, outName, Filter1, Filter2) {
 	    setResult(column_label, j, profile[j]);
 	}
 	updateResults();
+	
 	saveAs("Results", outName + "ZonationToolProfiles.csv");
 
 	
