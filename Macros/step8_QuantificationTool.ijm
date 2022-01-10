@@ -72,11 +72,6 @@ for (i=0; i< sortedFilelist.length; i++) {
 	print("processing ... " + sortedFilelist[i]);
 
 	open(path + sortedFilelist[i]);
-
-	imgName=getTitle();
-	shortTitle = replace(imgName, ".tif", "");
-	column_label = imgName;
-	
 	Quantification(sortedFilelist[i]); // call function quantification
 	
 	close("*");
@@ -85,6 +80,31 @@ for (i=0; i< sortedFilelist.length; i++) {
 
 selectWindow("Skeleton Stats");
 saveAs("Results", path + "Skeleton Stats.csv");
+close("Results");
+
+
+// 10012022 - try zonationTool TH and skel outside first for loop to see if that fixes issue with overwriting and actually appends zonationTool results
+counter = 0;
+for (j=0; j< sortedFilelist.length; j++) {
+	// open TH image
+	open(path + sortedFilelist[j]);
+	
+	imgName=getTitle();
+	shortTitle = replace(imgName, ".tif", "");
+	column_label = imgName;
+	
+	// plot texture segmented/TH image
+	plotIntensity(sortedFilelist[j], outZone, "Average", "Average"); // filename, inputFolder, outputFolder
+	
+	// plot texture of skeletonized image	
+	open(OutputDirSkel + "Skel_" + sortedFilelist[j]);
+	selectWindow("Skel_" + sortedFilelist[j]);
+	plotIntensity("Skel_" + sortedFilelist[j], OutputDirSkel, "Max", "Average"); // filename, inputFolder, outputFolder
+	close("*");
+	
+	counter++;
+}
+
 
 run("Close All");
 
@@ -104,10 +124,10 @@ function Quantification(title){
 // This function quantifies volume, volume coverage, surface volume, and thickness;
 // it also plots apicobasal texture of the segmented and skeletonized data calling the function "plotIntensity"
 
-	close("Results");
+	//close("Results"); // test 06012022
 	// plot texture segmented image
-	plotIntensity(sortedFilelist[i], outZone, "Average", "Average"); // filename, inputFolder, outputFolder
-	wait(1000);
+//	plotIntensity(sortedFilelist[i], outZone, "Average", "Average"); // filename, inputFolder, outputFolder
+	//wait(1000);
 
 	selectWindow(sortedFilelist[i]);
 	rename("img");
@@ -169,8 +189,8 @@ function Quantification(title){
 	// apicobasal texture analysis Skeleton
 	selectWindow("Skel_" + sortedFilelist[i]);
 	close("Results");
-	plotIntensity("Skel_" + sortedFilelist[i], OutputDirSkel, "Max", "Average"); // filename, inputFolder, outputFolder
-	wait(1000);
+//	plotIntensity("Skel_" + sortedFilelist[i], OutputDirSkel, "Max", "Average"); // filename, inputFolder, outputFolder
+//	wait(1000);
 	
 	selectWindow("Skel_" + sortedFilelist[i]);
 	
@@ -251,25 +271,30 @@ function NucleiAnalysis(title){
 
 function plotIntensity(title, outName, Filter1, Filter2) { 
 ///// function to collapse 3D stack into 1D vector for texture analysis ///// 
+	run("8-bit");
+	
 	// get img and vx dimensions
 	getDimensions(width, height, channels, slices, frames);
 	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
-	
-	run("8-bit");
-	
+		
 	// -- dimensionality reduction
 	// reduce in z-axis
 	run("Z Project...", "projection=[" + Filter1 + " Intensity]"); // need to be Avg not Max bc binary/TH image
-	saveAs("Tiff", outName + "intermZonation_" + sortedFilelist[i]); // 1D representation of 3D data; intensity showing distribution of lamination
-	close("IntermZonation_" + sortedFilelist[i]);
+
+	// uncomment the next 4 lines if working with resliced data
+/*
+	saveAs("Tiff", outName + "intermZonation_" + sortedFilelist[i]); 
+	wait(1000);
+	close("IntermZonation_" + sortedFilelist[i]); // close and open as reslicing can impact this 
 	open(outName + "IntermZonation_" + sortedFilelist[i]);
+*/
 	
 	// reduce in x-axis
-	run("Reslice [/]...", "output=1.000 start=Left");
+	run("Reslice [/]...", "output=1.000 start=Left"); // reslice 2D-MIP to get 1D-vector
 	run("Z Project...", "projection=[" + Filter2 + " Intensity]");
 	run("Enhance Contrast", "saturated=0.35");
 	run("Fire");
-	saveAs("Tiff", outName + "Zonation_" + sortedFilelist[i]); // 1D representation of 3D data; intensity showing distribution of lamination
+	saveAs("Tiff", outName + "Zonation_" + sortedFilelist[j]); // 1D representation of 3D data; intensity showing distribution of lamination
 
 	// blur to smoothen 1D vector
 	BlurFactor = height / 40; // this factor will be needed to smoothen data 
@@ -282,10 +307,12 @@ function plotIntensity(title, outName, Filter1, Filter2) {
 	profile = getProfile(); 
 	
 	// write profile into Results table and save table
-	for (j=0; j<profile.length; j++){ // next 3 lines from https://imagej.nih.gov/ij/macros/StackProfileData.txt
+	for (j=0; j<profile.length; j++){ // from https://imagej.nih.gov/ij/macros/StackProfileData.txt
 	    setResult(column_label, j, profile[j]);
 	}
 	updateResults();
+	
 	saveAs("Results", outName + "ZonationToolProfiles.csv");
+
 	
 }
