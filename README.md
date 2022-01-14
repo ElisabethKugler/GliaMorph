@@ -18,7 +18,7 @@ BSD 3-Clause License <br/>
 Copyright (c) [2021], [Elisabeth C. Kugler, University College London, United Kingdom] <br/>
 All rights reserved.
 
-![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=ElisabethKugler&show_icons=true)
+![Eli's GitHub stats](https://github-readme-stats.vercel.app/api?username=ElisabethKugler&show_icons=true)
 [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=ElisabethKugler&layout=compact)](https://github.com/ElisabethKugler/github-readme-stats)
 
 
