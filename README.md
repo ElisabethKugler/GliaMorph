@@ -1,4 +1,5 @@
 # GliaMorph Introduction
+
 GliaMorph Toolkit to process and analyse Müller glia morphology (implemented as Fiji Macros to allow modular application).
 
 BioRxiv manuscript - GliaMorph biological application: XXX
@@ -16,6 +17,10 @@ Minimum Example Data 29112021: **Data Link**: https://zenodo.org/record/5735442 
 BSD 3-Clause License <br/>
 Copyright (c) [2021], [Elisabeth C. Kugler, University College London, United Kingdom] <br/>
 All rights reserved.
+
+![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=ElisabethKugler&show_icons=true)
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=ElisabethKugler&layout=compact)](https://github.com/ElisabethKugler/github-readme-stats)
+
 
 ## Contributions and Feedback
 This GitHub repository will be maintained until at least 2023 by Elisabeth Kugler. However, as #GliaMorph tools are meant to be used and useful, the code and tools are meant to change and be adaptable. Please help us make the most out of #GliaMorph:
