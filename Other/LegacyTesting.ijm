@@ -18,6 +18,8 @@ All rights reserved.
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+setBatchMode(true); //batch mode on
+
 ///// prompt user to select input folders
 pathO = getDirectory("Input Folder Original"); 
 filelistO = getFileList(pathO); 
@@ -33,9 +35,19 @@ dir = File.getParent(pathO);
 OutputDir = dir + "/out/"; 
 File.makeDirectory(OutputDir);
 
+f = File.open(OutputDir + "OverlapResults.txt");
+print(f, "FileName" + "\t" + "Total Overlap" + "\t" + "Jaccard Index" + "\t" + "Dice Coefficient");
+
+
 // runTime check
 getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
 print(hour + ":" + minute + ":" + second);
+
+// set colours and measurements
+setBackgroundColor(0, 0, 0);
+setForegroundColor(255, 255, 255);
+run("Set Measurements...", "area mean standard min centroid center perimeter bounding fit integrated area_fraction stack redirect=None decimal=3");
+
 
 for (i=0; i< sortedFilelistO.length; i++) {   
 	// only open images that end in ".czi"
@@ -46,11 +58,19 @@ for (i=0; i< sortedFilelistO.length; i++) {
 	// and thus counter was thrown off
 
 	open(pathO + sortedFilelistO[i]);
+	run("16-bit");
+
+	// get short file name without tif for file selection hen saving MorpholibJ results
+	imgName = getTitle();
+	shortimgName = replace(imgName, ".tif", "");
+	
 	// open adapted image with similar name	
 	open(pathA + sortedFilelistA[k]); // counter increases and opens second one
+	run("16-bit");
+	run("Invert", "stack"); // if TH compared to orig
 	
 	LegacyTesting(sortedFilelistO[i],sortedFilelistA[k]);
-	
+	close("*");
 	}
 }
 close("*");
@@ -67,18 +87,30 @@ showMessage("Macro is finished"); // show message when Macro is finished
 
 function LegacyTesting(orig,adap) { 
 // function description
-
+	
+	
 	// Quantify Label Overlap measure - requires MorpholibJ > update: IJPB-plugins
 //	o = replace(sortedFilelistO[i], ".tif", "");     
 //	a = replace(sortedFilelistA[i], ".tif", "");     
 	run("Label Overlap Measures", "source=[" + sortedFilelistO[i] + "] target=[" + sortedFilelistA[k] + "] overlap jaccard dice");
-	saveAs("Results",  OutputDir + sortedFilelistO[i] + "JacDicOv.csv");
-	close("Results"); // close results
+	
+
+	close(shortimgName + "-individual-labels-overlap-measurements"); // close results with slice-by-slice results
+	selectWindow(shortimgName + "-all-labels-overlap-measurements"); // select window with overall results
+	TO = getResult("TotalOverlap"); 			
+	JI = getResult("JaccardIndex"); 	
+	DC = getResult("DiceCoefficient"); 	
+	print(f, shortimgName + "\t" + TO + "\t" + JI + "\t" + DC);
+
+	saveAs("Results",  OutputDir + sortedFilelistO[i] + "_JacDicOv.csv");
+	close(sortedFilelistO[i] + "_JacDicOv.csv"); // close results
 	
 	// Coloured overlap
 	selectWindow(sortedFilelistO[i]);
 	run("Green"); // original
 	selectWindow(sortedFilelistA[k]);
+	run("Invert", "stack"); // if TH compared to orig
+	
 	run("Magenta"); // adapted
 	run("Merge Channels...", "c1=[" + sortedFilelistO[i] + "] c2=[" + sortedFilelistA[k] + "] create");
 	
