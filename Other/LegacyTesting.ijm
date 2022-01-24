@@ -32,7 +32,7 @@ sortedFilelistA = Array.sort(filelistA);
 ///// create output folders and file
 // EDMs for thickness measurements
 dir = File.getParent(pathO);
-OutputDir = dir + "/out-OrigToOldSegm/"; 
+OutputDir = dir + "/out-OrigToTHEdges/"; 
 File.makeDirectory(OutputDir);
 
 f = File.open(OutputDir + "OverlapResults.txt");
