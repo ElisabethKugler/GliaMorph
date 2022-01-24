@@ -133,7 +133,7 @@ function plotIntensity(title) {
 	
 	// reduce in x-axis
 	run("Reslice [/]...", "output=1.000 start=Left");
-	run("Z Project...", "projection=[Average Intensity]");
+	run("Z Project...", "projection=[Max Intensity]");
 	run("Enhance Contrast", "saturated=0.35");
 	run("Fire");
 	saveAs("Tiff", ZonationToolDir + "Zonation_" + img); // 1D representation of 3D data; intensity showing distribution of lamination
