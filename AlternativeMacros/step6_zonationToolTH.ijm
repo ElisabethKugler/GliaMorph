@@ -80,11 +80,11 @@ if (IntPlot==choices[0]){ // yes
 			
 			// 05032021 pre-processing test to improve quality
 			// z-dimension bleach/intensity correction
-			run("Bleach Correction", "correction=[Simple Ratio] background=0");
-			selectWindow("DUP_" + img);
-			rename(img);
+	//		run("Bleach Correction", "correction=[Simple Ratio] background=0");
+	//		selectWindow("DUP_" + img);
+	//		rename(img);
 			// CLAHE
-			run("Enhance Contrast...", "saturated=0.3 normalize process_all");
+	//		run("Enhance Contrast...", "saturated=0.3 normalize process_all");
 					
 			plotIntensity(sortedFilelist[i]);
 			

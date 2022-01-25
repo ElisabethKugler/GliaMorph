@@ -75,16 +75,17 @@ if (IntPlot==choices[0]){ // yes
 			imageHeight = height * pixelHeight; 
 			imageHeightwoSigma = imageHeight - sigma;
 			
+			run("Make Binary", "method=Default background=Default");
 
 			print(f, img + " \t"  + imageHeight + " \t" + imageHeightwoSigma);
 			
 			// 05032021 pre-processing test to improve quality
 			// z-dimension bleach/intensity correction
-			run("Bleach Correction", "correction=[Simple Ratio] background=0");
-			selectWindow("DUP_" + img);
-			rename(img);
+		//	run("Bleach Correction", "correction=[Simple Ratio] background=0");
+		//	selectWindow("DUP_" + img);
+		//	rename(img);
 			// CLAHE
-			run("Enhance Contrast...", "saturated=0.3 normalize process_all");
+		//	run("Enhance Contrast...", "saturated=0.3 normalize process_all");
 					
 			plotIntensity(sortedFilelist[i]);
 			
@@ -133,7 +134,7 @@ function plotIntensity(title) {
 	
 	// reduce in x-axis
 	run("Reslice [/]...", "output=1.000 start=Left");
-	run("Z Project...", "projection=[Max Intensity]");
+	run("Z Project...", "projection=[Average Intensity]");
 	run("Enhance Contrast", "saturated=0.35");
 	run("Fire");
 	saveAs("Tiff", ZonationToolDir + "Zonation_" + img); // 1D representation of 3D data; intensity showing distribution of lamination
