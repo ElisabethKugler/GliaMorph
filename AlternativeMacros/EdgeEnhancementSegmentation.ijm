@@ -1,4 +1,4 @@
-/* Segmentation of MG cells from pre-processed images
+/* Segmentation of MG cells using edge-enhancment filtering
  * Author: Elisabeth Kugler 2021
  * contact: kugler.elisabeth@gmail.com
 
@@ -51,7 +51,18 @@ for (i=0; i< sortedFilelist.length; i++) {
 	open(path + sortedFilelist[i]);
 	rename("img");
 
+	
+	//get image properties
 	getDimensions(width, height, channels, slices, frames);
+	preChannels = channels;
+	preSlices = slices;
+	preFrames = frames;
+	// get voxel properties
+	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
+	prePixelWidth =pixelWidth;
+	prePixelHeight = pixelHeight;
+	preVoxelDepth = voxelDepth;
+	
 	halfPos = round(slices / 2);
 	setSlice(halfPos);
 	run("Enhance Contrast", "saturated=0.35");
@@ -70,8 +81,10 @@ for (i=0; i< sortedFilelist.length; i++) {
 	run("3D Edge and Symmetry Filter", "alpha=0.500 compute_symmetry radius=10 normalization=10 scaling=2 improved");
 	wait(2000);
 
- 
 	selectWindow("Symmetry_smoothed_10");
+// re-set original image values
+	run("Properties...", "channels=" + preChannels + " slices=" + preSlices + " frames=" + preFrames +" unit=µm pixel_width=" + prePixelWidth + " pixel_height=" + prePixelHeight + " voxel_depth=" + preVoxelDepth);
+	
 	setSlice(halfPos);
 	// run("Enhance Contrast", "saturated=0.35");
 	
