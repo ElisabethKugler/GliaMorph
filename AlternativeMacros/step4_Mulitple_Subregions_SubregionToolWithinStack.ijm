@@ -1,4 +1,10 @@
 /* Semi-automatic ROI selection tool within stack with ROI within stack
+ * this Macro uses multiple ROIs per image 
+ * >> this allows multiple clones to be extracted from one image
+ * 
+ * To setup: needs update site "ROI-group"
+ * then draw multiple ROIs > Select > Properties (1,2,.. N) [integers]
+ * 
  * Author: Elisabeth Kugler 2021
  * contact: kugler.elisabeth@gmail.com
 
@@ -7,11 +13,6 @@ BSD 3-Clause License
 Copyright (c) [2021], [Elisabeth C. Kugler, University College London, United Kingdom]
 All rights reserved.
 
-(1) prompt for input folder
-(2) prompt for RoiSetLine.zip
-(3) rotation to align image along y-axis (might require 90degreeRotationTool first - see documentation)
-(4) performs x-y reduction
-(5) performs reduction in z - from the slice that original ROI was drawn
 
 GNU General Public License v2.0
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -81,7 +82,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 		selectWindow(sortedFilelist[i]);
 		
 		xyReduction(sortedFilelist[i]);
-		zReduction(sortedFilelist[i]);
+		// zReduction(sortedFilelist[i]); // take this out here when looking at multiple ROIs in the same image
 
 		close("*");
 	}
@@ -106,7 +107,15 @@ function xyReduction(title) {
 //get image properties
 	getDimensions(width, height, channels, slices, frames);
 	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
+
+	
 	roiManager("Select", r);	
+
+// while ROIGroupNr stays the same 
+// stay in this image 
+	ROIGroupNrCounter = 0;
+
+	ROIGroupNr = Roi.getGroup();
 		
 	run("Measure"); // measure the angle of line ROI for rotation
 
@@ -155,10 +164,6 @@ function xyReduction(title) {
 ///// Bounding Box /////
 	// rotate line ROI
 	roiManager("Select", r);
-	test = Roi.getGroup();
-print(test);
-
-
 	
 	run("Rotate...", "rotate angle=" + rot);
 	roiManager("Update");
@@ -212,7 +217,8 @@ print(test);
 
 	selectWindow("Results"); // close RoiSetLine results table
 	run("Close");
-	r++; // counter for ROI in ROIset
+	
+// 	r++; // counter for ROI in ROIset - remove this here for multiple ROIs in one image 
 
 	// make box
 	setTool("rectangle");	
@@ -230,6 +236,10 @@ print(test);
 	saveAs("Jpeg", xyDirMIPs + "MIPxy-reduced_" + filelist[i]); 
 	close("MIPxy-reduced_" + filelist[i]);
 	selectWindow("xy-reduced_" + filelist[i]);
+
+	zReduction(sortedFilelist[i]); // moved this here for multiple ROIs in the same image
+
+	r++; // counter for ROI in ROIset -- moved this here for multiple ROIs in the same image
 }
 
 
