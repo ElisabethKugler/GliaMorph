@@ -108,15 +108,26 @@ function xyReduction(title) {
 	getDimensions(width, height, channels, slices, frames);
 	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
 
-	
-	roiManager("Select", r);	
+	var ROIGroupNrCounter; // counter fir ROI group
+	roiManager("Select", r);	// ROI number
 
 // while ROIGroupNr stays the same 
 // stay in this image 
-	ROIGroupNrCounter = 0;
-
+// need to duplicate input to keep working on that 
 	ROIGroupNr = Roi.getGroup();
-		
+	
+	if (ROIGroupNr == ROIGroupNrCounter) {
+		selectWindow(sortedFilelist[i]);
+		run("Duplicate...", "title=ForSRs");
+	}else {
+		selectWindow(sortedFilelist[i]);
+		rename("ForSRs");
+	}	
+
+
+	selectWindow("ForSRs");
+	
+	roiManager("Select", r);	// make sure to select ROI again	
 	run("Measure"); // measure the angle of line ROI for rotation
 
 	MeasAngle = getResult("Angle"); // measured angle from LineROI
@@ -240,6 +251,9 @@ function xyReduction(title) {
 	zReduction(sortedFilelist[i]); // moved this here for multiple ROIs in the same image
 
 	r++; // counter for ROI in ROIset -- moved this here for multiple ROIs in the same image
+	ROIGroupNrCounter++; // counter for ROI group number (e.g. 3 ROIs but 1 group if they are all in the same sample)
+
+	
 }
 
 
