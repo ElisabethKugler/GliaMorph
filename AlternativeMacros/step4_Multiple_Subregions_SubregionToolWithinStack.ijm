@@ -4,7 +4,7 @@
  * 
  * To setup: needs update site "ROI-group"
  * then draw multiple ROIs > Select > Properties (1,2,.. N) [integers]
- * 
+
  * Author: Elisabeth Kugler 2021
  * contact: kugler.elisabeth@gmail.com
 
@@ -12,7 +12,6 @@ BSD 3-Clause License
 
 Copyright (c) [2021], [Elisabeth C. Kugler, University College London, United Kingdom]
 All rights reserved.
-
 
 GNU General Public License v2.0
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -35,7 +34,7 @@ xySize = Dialog.getNumber(); // micrometer x,y width - can be changed
 zDepth = Dialog.getNumber(); // micrometers z-stack depth - can be changed
 additionBelow = Dialog.getNumber(); // sigma to be attached below to include vessels
 
-xySizeHalf = xySize / 2; // do not change!
+xySizeHalf = round(xySize / 2); // do not change!
 
 // set measurements for retinaHeight
 run("Set Measurements...", "area mean standard min perimeter bounding fit area_fraction stack redirect=None decimal=3");
@@ -107,7 +106,7 @@ function xyReduction(title) {
 //get image properties
 	getDimensions(width, height, channels, slices, frames);
 	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
-
+	
 	var ROIGroupNrCounter; // counter fir ROI group
 	roiManager("Select", r);	// ROI number
 
@@ -175,7 +174,6 @@ function xyReduction(title) {
 ///// Bounding Box /////
 	// rotate line ROI
 	roiManager("Select", r);
-	
 	run("Rotate...", "rotate angle=" + rot);
 	roiManager("Update");
 		
@@ -186,14 +184,14 @@ function xyReduction(title) {
 	
 	// calculate box width and check image is wide enough
 	MeasXum = getResult("BX"); // measured X-position from LineROI as centrepoint
-	MeasX = MeasXum / pixelWidth; // vx
+	MeasX = round(MeasXum / pixelWidth); // vx
 	
 	MeasYum = getResult("BY"); // measured X-position from LineROI as centrepoint
-	MeasY = MeasYum / pixelHeight; // vx == omege
+	MeasY = round(MeasYum / pixelHeight); // vx == omege
 	
 	MeasLengthum = getResult("Length"); // measured length of line ROI after Rotation
-	MeasLength = MeasLengthum / pixelHeight; // vx
-	sigma = additionBelow / pixelHeight; // is the additional length added at the bottom for EC analysis
+	MeasLength = round(MeasLengthum / pixelHeight); // vx
+	sigma = round(additionBelow / pixelHeight); // is the additional length added at the bottom for EC analysis
 
 	remainingImg = (height - MeasY) + MeasLength;
 
@@ -213,8 +211,8 @@ function xyReduction(title) {
 	B = width - MeasX;		// how much space there is to the right
 	A = width - B;
 	// make box 60um wide
-	boxHalfWidth = round(xySizeHalf / pixelWidth);
-	TotalBoxWidth = round(2 * boxHalfWidth);
+	boxHalfWidth = round(xySizeHalf / pixelWidth); // xySizeHalf is in microns >> boxHalfWidth is in vx
+	TotalBoxWidth = round(2 * boxHalfWidth); // vx
 	
 	if (B >= boxHalfWidth){ // box fits right
 		if (A >= boxHalfWidth) { // box fits left
@@ -228,10 +226,10 @@ function xyReduction(title) {
 
 	selectWindow("Results"); // close RoiSetLine results table
 	run("Close");
-	
-// 	r++; // counter for ROI in ROIset - remove this here for multiple ROIs in one image 
+	// 	r++; // counter for ROI in ROIset - remove this here for multiple ROIs in one image 
 
 	// make box
+	
 	setTool("rectangle");	
 	makeRectangle(LStart, MeasY, TotalBoxWidth, BoxHeight); // x,y,w,h
 	run("Crop");
@@ -253,7 +251,7 @@ function xyReduction(title) {
 	r++; // counter for ROI in ROIset -- moved this here for multiple ROIs in the same image
 	ROIGroupNrCounter++; // counter for ROI group number (e.g. 3 ROIs but 1 group if they are all in the same sample)
 
-	
+
 }
 
 

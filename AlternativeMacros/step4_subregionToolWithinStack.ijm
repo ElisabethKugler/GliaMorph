@@ -34,7 +34,7 @@ xySize = Dialog.getNumber(); // micrometer x,y width - can be changed
 zDepth = Dialog.getNumber(); // micrometers z-stack depth - can be changed
 additionBelow = Dialog.getNumber(); // sigma to be attached below to include vessels
 
-xySizeHalf = xySize / 2; // do not change!
+xySizeHalf = round(xySize / 2); // do not change!
 
 // set measurements for retinaHeight
 run("Set Measurements...", "area mean standard min perimeter bounding fit area_fraction stack redirect=None decimal=3");
@@ -165,14 +165,14 @@ function xyReduction(title) {
 	
 	// calculate box width and check image is wide enough
 	MeasXum = getResult("BX"); // measured X-position from LineROI as centrepoint
-	MeasX = MeasXum / pixelWidth; // vx
+	MeasX = round(MeasXum / pixelWidth); // vx
 	
 	MeasYum = getResult("BY"); // measured X-position from LineROI as centrepoint
-	MeasY = MeasYum / pixelHeight; // vx == omege
+	MeasY = round(MeasYum / pixelHeight); // vx == omege
 	
 	MeasLengthum = getResult("Length"); // measured length of line ROI after Rotation
-	MeasLength = MeasLengthum / pixelHeight; // vx
-	sigma = additionBelow / pixelHeight; // is the additional length added at the bottom for EC analysis
+	MeasLength = round(MeasLengthum / pixelHeight); // vx
+	sigma = round(additionBelow / pixelHeight); // is the additional length added at the bottom for EC analysis
 
 	remainingImg = (height - MeasY) + MeasLength;
 
@@ -192,8 +192,8 @@ function xyReduction(title) {
 	B = width - MeasX;		// how much space there is to the right
 	A = width - B;
 	// make box 60um wide
-	boxHalfWidth = round(xySizeHalf / pixelWidth);
-	TotalBoxWidth = round(2 * boxHalfWidth);
+	boxHalfWidth = round(xySizeHalf / pixelWidth); // xySizeHalf is in microns >> boxHalfWidth is in vx
+	TotalBoxWidth = round(2 * boxHalfWidth); // vx
 	
 	if (B >= boxHalfWidth){ // box fits right
 		if (A >= boxHalfWidth) { // box fits left
@@ -210,8 +210,9 @@ function xyReduction(title) {
 	r++; // counter for ROI in ROIset
 
 	// make box
+	
 	setTool("rectangle");	
-	makeRectangle(LStart, MeasY, TotalBoxWidth, BoxHeight); // x,y,w,h
+	makeRectangle(LStart, MeasY, xySize, BoxHeight); // x,y,w,h
 	run("Crop");
 		
 //	// save as tiff "xy-reduced_"
