@@ -1,4 +1,4 @@
-/* Segmentation of MG cells using edge-enhancment filtering
+/* Segmentation of MG cells using edge-enhancement filtering
  * Author: Elisabeth Kugler 2021
  * contact: kugler.elisabeth@gmail.com
 
