@@ -84,7 +84,42 @@ for (i=0; i< sortedFilelist.length; i++) {
 	
 		selectWindow(sortedFilelist[i]);
 		
-		xyReduction(sortedFilelist[i],currentGroup);
+
+	//RoiGroups = newArray(); // array of total Nr of ROIs in "ROISetLine.zip"
+	// Establish a list of groups indexes << from you peeps
+	for (roi = 0; roi < roiManager("Count"); roi++){
+		roiManager("Select", roi);	
+		//groupofselection = Roi.getGroup(); // 7 e.g. 7 images
+		//RoiGroups = Array.concat(RoiGroups, groupofselection); // 16 e.g. total nr or ROIs
+		groupOfRoi = Roi.getGroup(); 
+    	if (groupOfRoi == currentGroup){
+	        // the ROI belongs to the current group, do something
+	        // otherwise dont do anything ie skip it
+	        //  run("Duplicate...", "title=ForSRs duplicate"); // duplicate image to extract multiple subregions from this image
+     		run("Duplicate...", "duplicate");
+        //	selectWindow(sortedFilelist[i]);
+        	xyReduction(sortedFilelist[i],currentGroup);
+
+
+          print("n" + groupOfRoi); // that works
+          
+        }else {
+        // I am trying to use this renaming and duplicating approach to "stay" in the same image
+		//	rename("ForSRs"); // renaming of the original image
+        selectWindow(sortedFilelist[i]);
+        xyReduction(sortedFilelist[i],currentGroup);
+
+
+        }
+        
+	}
+
+
+
+
+
+		
+		
 		// zReduction(sortedFilelist[i]); // take this out here when looking at multiple ROIs in the same image
 		currentGroup++;
 		close("*");
@@ -112,30 +147,7 @@ function xyReduction(title,group) {
 	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
 	
 	
-	//RoiGroups = newArray(); // array of total Nr of ROIs in "ROISetLine.zip"
-	// Establish a list of groups indexes << from you peeps
-	for (roi = 0; roi < roiManager("Count"); roi++){
-		roiManager("Select", roi);	
-		//groupofselection = Roi.getGroup(); // 7 e.g. 7 images
-		//RoiGroups = Array.concat(RoiGroups, groupofselection); // 16 e.g. total nr or ROIs
-		groupOfRoi = Roi.getGroup(); 
-    	if (groupOfRoi == currentGroup){
-	        // the ROI belongs to the current group, do something
-	        // otherwise dont do anything ie skip it
-	        //  run("Duplicate...", "title=ForSRs duplicate"); // duplicate image to extract multiple subregions from this image
-     		run("Duplicate...", "duplicate");
-        	selectWindow(sortedFilelist[i]);
 
-          print("n" + groupOfRoi); // that works
-          
-        }else {
-        // I am trying to use this renaming and duplicating approach to "stay" in the same image
-		//	rename("ForSRs"); // renaming of the original image
-        selectWindow(sortedFilelist[i]);
-
-        }
-        
-	}
 
 
 	
@@ -259,7 +271,7 @@ function xyReduction(title,group) {
 	zReduction(sortedFilelist[i]); // moved this here for multiple ROIs in the same image
 
 	r++; // counter for ROI in ROIset -- moved this here for multiple ROIs in the same image
-	ROIGroupNrCounter++; // counter for ROI group number (e.g. 3 ROIs but 1 group if they are all in the same sample)
+//	ROIGroupNrCounter++; // counter for ROI group number (e.g. 3 ROIs but 1 group if they are all in the same sample)
 
 
 }
