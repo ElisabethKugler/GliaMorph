@@ -87,6 +87,9 @@ for (i=0; i< sortedFilelist.length; i++) {
 	
 	setSlice(halfPos);
 	// run("Enhance Contrast", "saturated=0.35");
+
+	run("Median 3D...", "x=3 y=3 z=3");
+	wait(2000);
 	
 	run("8-bit");
 	run("Threshold...");
