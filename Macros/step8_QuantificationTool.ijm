@@ -93,6 +93,7 @@ for (j=0; j< sortedFilelist.length; j++) {
 	column_label = imgName;
 	
 	// plot texture segmented/TH image
+	open(path + sortedFilelist[j]);
 	plotIntensity(sortedFilelist[j], outZone, "Average", "Average"); // filename, inputFolder, outputFolder
 	
 	// plot texture of skeletonized image	
@@ -242,6 +243,10 @@ function Quantification(title){
 
 	//// -- SURFACE - uses edge detection and vox vol 
 	selectWindow("img");
+	
+	run("Duplicate...", "title=ForEdges duplicate");
+
+	selectWindow("ForEdges");
 	run("Find Edges", "stack");
 
 	// histogram count black 
@@ -253,7 +258,7 @@ function Quantification(title){
 	surface = volVox * surfaceVx;
 
 	// save edge/surface images
-	selectWindow("img");
+	selectWindow("ForEdges");
 	saveAs("Tiff", OutputDirSurf + "Edges_" + sortedFilelist[i]);
 	run("Z Project...", "projection=[Max Intensity]");
 	saveAs("Jpeg", OutputDirSurfMIPs + "MAX_Surface_" + sortedFilelist[i]);
