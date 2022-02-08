@@ -44,7 +44,7 @@ path = getDirectory("Input Folder");
 filelist = getFileList(path);
 sortedFilelist = Array.sort(filelist);
 
-setBatchMode(true); //batch mode on
+//setBatchMode(true); //batch mode on
 
 print("Input Directory: " + path);
 
@@ -107,21 +107,50 @@ function xyReduction(title) {
 	getDimensions(width, height, channels, slices, frames);
 	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
 	
-	var ROIGroupNrCounter; // counter fir ROI group
-	roiManager("Select", r);	// ROI number
+	var ROIGroupNrCounter; // counter for ROI group
+//	roiManager("Select", r);	// ROI number
 
 // while ROIGroupNr stays the same 
 // stay in this image 
 // need to duplicate input to keep working on that 
-	ROIGroupNr = Roi.getGroup();
-	
-	if (ROIGroupNr == ROIGroupNrCounter) {
+/*	ROIGroupNr = Roi.getGroup();
+
+	selectWindow(sortedFilelist[i]);
+	rename("ForSRs");
+		
+	while (ROIGroupNr) {
 		selectWindow(sortedFilelist[i]);
-		run("Duplicate...", "title=ForSRs");
+		run("Duplicate...", "title=ForSRs duplicate");
+	}
+*/
+/*	
+	if (ROIGroupNr != (ROIGroupNr+1)) {
+		selectWindow(sortedFilelist[i]);
+		run("Duplicate...", "title=ForSRs duplicate");
 	}else {
 		selectWindow(sortedFilelist[i]);
 		rename("ForSRs");
 	}	
+*/
+
+
+
+RoiGroups = newArray();
+
+// Establish list of groups indexes
+for (roi = 0; roi < roiManager("Count"); roi++){
+	roiManager("Select", roi);	
+	groupofselection = Roi.getGroup();
+	RoiGroups = Array.concat(RoiGroups, groupofselection);
+}
+
+// Select all rois for succesive groups 
+for (n = 0; i < RoiGroups.length; n++){
+	group = RoiGroups[n];
+	RoiManager.selectGroup(group);
+}
+
+
 
 
 	selectWindow("ForSRs");
@@ -236,12 +265,9 @@ function xyReduction(title) {
 		
 //	// save as tiff "xy-reduced_"
 	saveAs("Tiff", xyDir + "xy-reduced_" + filelist[i]); 
-	
+	ROIGroupNrCounter++; // counter for ROI group number (e.g. 3 ROIs but 1 group if they are all in the same sample)
 	// make and save MIP
 	run("Z Project...", "projection=[Max Intensity]");
-	run("Enhance Contrast", "saturated=0.35");
-	run("Enhance Contrast", "saturated=0.35");
-	run("Fire");
 	saveAs("Jpeg", xyDirMIPs + "MIPxy-reduced_" + filelist[i]); 
 	close("MIPxy-reduced_" + filelist[i]);
 	selectWindow("xy-reduced_" + filelist[i]);
@@ -249,7 +275,7 @@ function xyReduction(title) {
 	zReduction(sortedFilelist[i]); // moved this here for multiple ROIs in the same image
 
 	r++; // counter for ROI in ROIset -- moved this here for multiple ROIs in the same image
-	ROIGroupNrCounter++; // counter for ROI group number (e.g. 3 ROIs but 1 group if they are all in the same sample)
+	//ROIGroupNrCounter++; // counter for ROI group number (e.g. 3 ROIs but 1 group if they are all in the same sample)
 
 
 }
@@ -305,9 +331,6 @@ TopStart = slices - bottomStart;
 
 	// make and save MIP
 	run("Z Project...", "projection=[Max Intensity]");
-	run("Enhance Contrast", "saturated=0.35");
-	run("Enhance Contrast", "saturated=0.35");
-	run("Fire");
 	saveAs("Jpeg", zDirMIPs + "MIPz-reduced_" + filelist[i]); 
 	
 }

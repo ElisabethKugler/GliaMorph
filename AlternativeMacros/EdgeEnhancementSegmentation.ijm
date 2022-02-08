@@ -25,7 +25,7 @@ filelist = getFileList(path);
 sortedFilelist = Array.sort(filelist);
 
 ///// create output folder
-OutputDir = path + "/THEdgesOtsu/"; 
+OutputDir = path + "/THEdgesOtsu_26012022/"; 
 File.makeDirectory(OutputDir);
 
 OutputDirMIPs = OutputDir + "/MIPs/"; 
