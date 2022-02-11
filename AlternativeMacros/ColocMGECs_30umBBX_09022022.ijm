@@ -46,8 +46,17 @@ for (e=0; e< filelistECs.length; e++) {
 	open(pathECs + filelistECs[e]);
 	selectImage(filelistECs[e]);
 
-getDimensions(width, height, channels, slices, frames);
-getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
+	//get image properties
+	getDimensions(width, height, channels, slices, frames);
+	preChannels = channels;
+	preSlices = slices;
+	preFrames = frames;
+	// get voxel properties
+	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
+	prePixelWidth =pixelWidth;
+	prePixelHeight = pixelHeight;
+	preVoxelDepth = voxelDepth;
+
 
 
 	
@@ -65,12 +74,13 @@ getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
     rename("ECraw");
 
 	// get voxel dimensions
+
 	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
 	voxVol = (pixelWidth * pixelHeight * voxelDepth);
 	voxSurf = (pixelWidth * voxelDepth);
 	// get image dimensions
 	getDimensions(width, height, channels, slices, frames);
-	HalfStack = round(slices / 2); // find the centre of the stack - needed for TH
+	halfPos = round(slices / 2); // find the centre of the stack - needed for TH
 
 //--- open corresponding raw MG image - if endswith with same name as the EC raw image
 	for (m=0; m< filelistMGraw.length; m++) {
@@ -117,7 +127,7 @@ getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
 	run("Subtract Background...", "rolling=50 stack");
 	run("Gaussian Blur 3D...", "x=2 y=2 z=2");
 	
-	setSlice(HalfStack);
+	setSlice(halfPos);
 	run("Enhance Contrast...", "saturated=0.3");
 	run("Enhance Contrast...", "saturated=0.3");
 	run("8-bit");
@@ -127,7 +137,7 @@ getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
 	//setOption("BlackBackground", false);
 	run("Convert to Mask", "method=Otsu background=Dark");
 	// erosion to make it smaller after over-segmentation
-	run("Erode (3D)", "iso=255");
+//	run("Erode (3D)", "iso=255");
 	
 	run("8-bit");
 	
@@ -142,21 +152,29 @@ getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
 	selectImage("MGraw");
 	run("Duplicate...", "title=MGrawInterface duplicate");
 	selectImage("MGraw");
-	run("Subtract Background...", "rolling=50 stack");
-	run("Gaussian Blur 3D...", "x=2 y=2 z=2");
+	run("8-bit");
+	wait(2000);
+	run("Median 3D...", "x=2 y=2 z=2");
+	wait(2000);
 	
-	setSlice(HalfStack);
-	run("Enhance Contrast...", "saturated=0.3");
-	run("Enhance Contrast...", "saturated=0.3");
-	run("8-bit");
+	// segmentation
+	setSlice(halfPos);
+	run("3D Edge and Symmetry Filter", "alpha=0.500 compute_symmetry radius=10 normalization=10 scaling=2 improved");
+	wait(2000);
 
-	run("Threshold...");
-	setThreshold(10, 255);
-	//setOption("BlackBackground", false);
-	run("Convert to Mask", "method=Otsu background=Dark");
-	// erosion to make it smaller after over-segmentation
-	run("Erode (3D)", "iso=255");
+	selectWindow("Symmetry_smoothed_10");
+// re-set original image values
+	run("Properties...", "channels=" + preChannels + " slices=" + preSlices + " frames=" + preFrames +" unit=µm pixel_width=" + prePixelWidth + " pixel_height=" + prePixelHeight + " voxel_depth=" + preVoxelDepth);
+	
+	setSlice(halfPos);
+	// run("Enhance Contrast", "saturated=0.35");
+	
 	run("8-bit");
+	run("Threshold...");
+	setThreshold(7, 255);
+	setOption("BlackBackground", false);
+	run("Convert to Mask", "method=Otsu background=Dark");
+
 	
 	// save
 	saveAs("Tiff", ECOutDir + "MG_TH_" + nameShort); 
