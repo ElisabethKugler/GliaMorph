@@ -28,6 +28,7 @@ print(hour + ":" + minute + ":" + second);
 
 print("Input Directory: " + path);
 
+arrayHeight = newArray();
 
 //// open images from inputfolder
 for (i=0; i< sortedFilelist.length; i++) {   

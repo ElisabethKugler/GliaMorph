@@ -19,6 +19,7 @@ setBatchMode(true); //batch mode on
 
 ///// prompt user to select input folder
 path = getDirectory("Input Folder"); 
+//path = "D:/Data Recovery/Xhuljana/kdrl_mCherry_TP1_CAAXGFP/Rep5/120hpf/tiff/zDir/2CDir/MIPs/";
 filelist = getFileList(path); 
 sortedFilelist = Array.sort(filelist);
 
@@ -31,8 +32,6 @@ Dialog.show();
 
 // parse number
 maxHeight = Dialog.getNumber(); 
-
-
 
 
 // runTime check
