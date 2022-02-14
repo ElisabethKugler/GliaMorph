@@ -81,6 +81,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 		
 		xyReduction(sortedFilelist[i]);
 		zReduction(sortedFilelist[i]);
+		roiManager("delete all");
 
 		close("*");
 	}
@@ -242,11 +243,17 @@ function zReduction(title) {
 	saveAs("Tiff", zDir + "z-reduced_" + filelist[i]); 
 
 	// make and save MIP
+	if (channels>1) {
+		run("Channels Tool...");
+		Stack.setDisplayMode("composite");
+	}
+
+
 	run("Z Project...", "projection=[Max Intensity]");
 	run("Enhance Contrast", "saturated=0.35");
 	run("Enhance Contrast", "saturated=0.35");
 	run("Fire");
 	saveAs("Jpeg", zDirMIPs + "MIPz-reduced_" + filelist[i]); 
-	
+
 }
 
