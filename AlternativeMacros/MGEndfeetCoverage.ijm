@@ -79,7 +79,13 @@ for (e=0; e< filelistMGs.length; e++) {
 	// reslice
 	
 	run("Reslice [/]...", "output=" + preVoxelDepth + " start=Bottom");
-	run("Z Project...", "projection=[Max Intensity]");
+	if (frames > 1){
+		run("Z Project...", "projection=[Max Intensity] all");	
+	}else {
+		run("Z Project...", "projection=[Max Intensity]");
+	}
+
+	
 	run("Grays");
 	saveAs("Tiff", OutDir + "MAX_" + name);
 	
@@ -91,8 +97,12 @@ for (e=0; e< filelistMGs.length; e++) {
 	setAutoThreshold("Otsu dark");
 	setThreshold(40, 255);
 	setOption("BlackBackground", false);
-	run("Convert to Mask");
+	run("Convert to Mask", "method=Otsu background=Light calculate");
 
+	run("Invert", "stack"); // it measures the white as MG endfeet
+	saveAs("Tiff", OutDir + "MAX_TH_" + name);
+	run("Invert", "stack"); 
+	
 	// for timelapse
 	if (frames > 1){ // if more than one timeframe it is a timelapse
 	// swap frame and slices to iterate over slices
@@ -100,7 +110,7 @@ for (e=0; e< filelistMGs.length; e++) {
 		frames = preSlices;
 		
 		// iterate over each frame
-		for (f=0; f < frames; f++){
+		for (f=1; f < slices; f++){ // need to start interation with 1 - as there is no 0 slice
 			setSlice(f);
 			
 			// Stack.setFrame(f); //maybe swap frame and slice
@@ -114,8 +124,7 @@ for (e=0; e< filelistMGs.length; e++) {
 			
 			print(outFile, name + "\t" + f + "\t" + CalcArea + "\t" + fract);		
 		
-			run("Invert"); // it measures the white as MG endfeet
-			saveAs("Jpeg", OutDir + "MAX_TH_" + f + name);
+			
 		}
 		
 	}else {
