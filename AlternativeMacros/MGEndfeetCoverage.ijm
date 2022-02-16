@@ -16,7 +16,7 @@ pathMGraw = getDirectory("Input Folder raw MG data");
 filelistMGraw = getFileList(pathMGraw);
 filelistMGs = Array.sort(filelistMGraw); // sort file list numerically (more than 9 images can be in the folder)
 
-setBatchMode(true); //batch mode on
+//setBatchMode(true); //batch mode on
 
 // output directory
 OutDir = pathMGraw + "/OutputMGEndfeet/"; 
@@ -95,9 +95,15 @@ for (e=0; e< filelistMGs.length; e++) {
 
 	// for timelapse
 	if (frames > 1){ // if more than one timeframe it is a timelapse
+	// swap frame and slices to iterate over slices
+		slices= preFrames;
+		frames = preSlices;
+		
 		// iterate over each frame
 		for (f=0; f < frames; f++){
-			Stack.setFrame(f);
+			setSlice(f);
+			
+			// Stack.setFrame(f); //maybe swap frame and slice
 			
 			// measure
 			run("Measure");
