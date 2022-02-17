@@ -16,7 +16,6 @@ pathMGraw = getDirectory("Input Folder raw MG data");
 filelistMGraw = getFileList(pathMGraw);
 filelistMGs = Array.sort(filelistMGraw); // sort file list numerically (more than 9 images can be in the folder)
 
-//setBatchMode(true); //batch mode on
 
 // output directory
 OutDir = pathMGraw + "/OutputMGEndfeet/"; 
@@ -39,111 +38,95 @@ run("Set Measurements...", "area mean standard min perimeter bounding fit area_f
 // ---- open files and iterate through them, using EC images as guide
 for (e=0; e< filelistMGs.length; e++) {
 	if (endsWith(filelistMGs[e], ".tif")) {
-	// open raw ECs image
-	open(pathMGraw + filelistMGs[e]);
-	selectImage(filelistMGs[e]);
-
-	//get image properties
-	getDimensions(width, height, channels, slices, frames);
-	preChannels = channels;
-	preSlices = slices;
-	preFrames = frames;
-	// get voxel properties
-	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
-	prePixelWidth =pixelWidth;
-	prePixelHeight = pixelHeight;
-	preVoxelDepth = voxelDepth;
+		// open raw ECs image
+		open(pathMGraw + filelistMGs[e]);
+		selectImage(filelistMGs[e]);
 	
-	halfPos = round(slices / 2); // find the centre of the stack - needed for TH
-	
-	// replace channel info "CX-" from file name ("CX-" from "splitChannelsTool")
-    name = getTitle();
-
-	// call function to extract endfeet zone using EC information to draw a larger bounding box
-	// use EC height -> multiply by 2
-	EndfeetExtraction(filelistMGs[e]);
-
-
-	//3D bleach correction to correct for intra-stack intensity variability
-	run("Bleach Correction", "correction=[Simple Ratio] background=0");
-	wait(1000);
-    selectWindow(name);
-    close(name);
-    selectWindow("DUP_" + name); // bleach corrected
-    rename("MGraw");
-    run("8-bit");
-
-
-
-	
-	// reslice
-	
-	run("Reslice [/]...", "output=" + preVoxelDepth + " start=Bottom");
-	if (frames > 1){
-		run("Z Project...", "projection=[Max Intensity] all");	
-	}else {
-		run("Z Project...", "projection=[Max Intensity]");
-	}
-
-	
-	run("Grays");
-	saveAs("Tiff", OutDir + "MAX_" + name);
-	
-	// smoothen and enhance
-	run("Median...", "radius=3");
-	run("Enhance Local Contrast (CLAHE)", "blocksize=127 histogram=256 maximum=3 mask=*None* fast_(less_accurate)");
-	// TH
-	run("Threshold...");
-	setAutoThreshold("Otsu dark");
-	setThreshold(40, 255);
-	setOption("BlackBackground", false);
-	run("Convert to Mask", "method=Otsu background=Light calculate");
-
-	run("Invert", "stack"); // it measures the white as MG endfeet
-	saveAs("Tiff", OutDir + "MAX_TH_" + name);
-	run("Invert", "stack"); 
-	
-	// for timelapse
-	if (frames > 1){ // if more than one timeframe it is a timelapse
-	// swap frame and slices to iterate over slices
-		slices= preFrames;
-		frames = preSlices;
+		//get image properties
+		getDimensions(width, height, channels, slices, frames);
+		preChannels = channels;
+		preSlices = slices;
+		preFrames = frames;
+		// get voxel properties
+		getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
+		prePixelWidth =pixelWidth;
+		prePixelHeight = pixelHeight;
+		preVoxelDepth = voxelDepth;
 		
-		// iterate over each frame
-		for (f=1; f < slices; f++){ // need to start interation with 1 - as there is no 0 slice
-			setSlice(f);
+		halfPos = round(slices / 2); // find the centre of the stack - needed for TH
+		
+		// replace channel info "CX-" from file name ("CX-" from "splitChannelsTool")
+	    name = getTitle();
+	
+		// call function to extract endfeet using 30um box from the bottom of the image
+		EndfeetExtraction(filelistMGs[e]);
+	
+		//3D bleach correction to correct for intra-stack intensity variability
+		run("Bleach Correction", "correction=[Simple Ratio] background=0");
+		wait(1000);
+	    selectWindow(name);
+	    close(name);
+	    selectWindow("DUP_" + name); // bleach corrected
+	    rename("MGraw");
+	    run("8-bit");
+	
+		// analyse Endfeet
+		// > reslice > MIP > TH > Area and Percentage measurement
+		run("Reslice [/]...", "output=" + preVoxelDepth + " start=Bottom");
+		if (frames > 1){ // for timelapses
+			run("Z Project...", "projection=[Max Intensity] all");	
+		}else { // for single-time points
+			run("Z Project...", "projection=[Max Intensity]");
+		}
+	
+		// LUT gray to make image gray
+		run("Grays");
+		saveAs("Tiff", OutDir + "MAX_" + name);
+		
+		// smoothen and enhance before segmenting with Threshold
+		run("Median...", "radius=3");
+		run("Enhance Local Contrast (CLAHE)", "blocksize=127 histogram=256 maximum=3 mask=*None* fast_(less_accurate)");
+		// segmentation with Otsu Threshold
+		run("Threshold...");
+		setAutoThreshold("Otsu dark");
+		setThreshold(40, 255);
+		setOption("BlackBackground", false);
+		run("Convert to Mask", "method=Otsu background=Light calculate");
+	
+		run("Invert", "stack"); // it measures the white as MG endfeet
+		saveAs("Tiff", OutDir + "MAX_TH_" + name);
+		run("Invert", "stack"); 
+		
+		// for timelapse - need to iterate over the individual timepoints
+		if (frames > 1){ // if more than one timeframe it is a timelapse
+		// swap frame and slices to then iterate over slices
+			slices= preFrames;
+			frames = preSlices;
 			
-			// Stack.setFrame(f); //maybe swap frame and slice
+			// iterate over each frame
+			for (f=1; f < slices; f++){ // need to start interation with 1 - as there is no 0 slice
+				setSlice(f);
+				
+				// Analyse > Measure to derive area and %area
+				run("Measure");
+				AreaUm = getResult("Area");
+				fract = getResult("%Area"); //	area_fraction  %Area
 			
-			// measure
+				CalcArea = (AreaUm*fract)/100; // calculate covered area
+				// print measurements into output file
+				print(outFile, name + "\t" + f + "\t" + CalcArea + "\t" + fract);				
+			}	
+		}else {
+			// Analyse > Measure to derive area and %area
 			run("Measure");
 			AreaUm = getResult("Area");
 			fract = getResult("%Area"); //	area_fraction  %Area
 		
-			CalcArea = (AreaUm*fract)/100;
-			
-			print(outFile, name + "\t" + f + "\t" + CalcArea + "\t" + fract);		
-		
-			
+			CalcArea = (AreaUm*fract)/100; // calculate covered area
+			// print measurements into output file
+			print(outFile, name + "\t" + "1" + "\t" + CalcArea + "\t" + fract);		
 		}
-		
-	}else {
-		
-		// measure
-		run("Measure");
-		AreaUm = getResult("Area");
-		fract = getResult("%Area"); //	area_fraction  %Area
-	
-		CalcArea = (AreaUm*fract)/100;
-		
-		print(outFile, name + "\t" + "1" + "\t" + CalcArea + "\t" + fract);		
-	
-		run("Invert"); // it measures the white as MG endfeet
-		saveAs("Jpeg", OutDir + "MAX_TH_" + name);
-	}
-
-	
-	run("Close All");
+		run("Close All");
 	}
 }
 
@@ -158,7 +141,7 @@ showMessage("Macro is finished"); // show message when finished
 
 //--- function to extract ROI, using EC height and multiplyting this by 2
 function EndfeetExtraction(title){
-		// select 3D stack
+		// select 3D input stack
 		selectWindow(name);
 	
 		// draw bounding box 30um
