@@ -68,7 +68,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 	run("Enhance Contrast", "saturated=0.35");
 
 	// bleach correction in z direction as there is significant signal decay axially w confocal images
-	run("Bleach Correction", "correction=[Simple Ratio] background=0");
+	run("Bleach Correction", "correction=[Simple Ratio] background=0"); // intensity correction within stack
 	selectWindow("DUP_" + "img");
 	// pre-processing
 	run("8-bit");
