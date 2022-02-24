@@ -95,6 +95,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 	run("Convert to Mask", "method=Otsu background=Dark");
 
 	rename("Segm");
+	run("3D Fill Holes");
 
 	// removal of unconnected components
 	// get rid of "signal"
