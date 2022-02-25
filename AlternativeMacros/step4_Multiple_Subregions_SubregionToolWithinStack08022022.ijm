@@ -83,8 +83,8 @@ for (i=0; i< sortedFilelist.length; i++) {
 
 		open(path + sortedFilelist[i]);
 		// show rogress
-		showProgress(i+1, sortedFilelist.length);
-		print("processing ... " + sortedFilelist[i]);
+	//	showProgress(i+1, sortedFilelist.length);
+	//	print("processing ... " + sortedFilelist[i]);
 		meep = getTitle();
 		short = replace(meep, ".tif", "");
 
@@ -122,26 +122,142 @@ function xyReduction(title) {
 		if (groupOfRoi == currentGroup){
 	        // the ROI belongs to the current group, do something
 	        // otherwise dont do anything ie skip it
+
+	        // debug
 	        print(currentGroup);
+	        print("processing ... " + sortedFilelist[i]); // that works - EK 250220222
+
 	        selectWindow(sortedFilelist[i]);
 			run("Duplicate...", "title=ForSRs duplicate");
+			wait(2000);
 
-			roiManager("Select", r);	// make sure to select ROI again	
+			roiManager("Select", roi);	// make sure to select ROI again	
 			run("Measure"); // measure the angle of line ROI for rotation
 		
 			MeasAngle = getResult("Angle"); // measured angle from LineROI
 		
-			// DO SOMETHING
+			///// 1 bottom right quadrant (0 to -90)
+			if (MeasAngle <= 0 && MeasAngle >= -90){
+			 	betrag = abs(MeasAngle);
+				// rotate to 0 
+				rot01 = -(0 + betrag);
+				run("Rotate... ", "angle=" + rot01 + " grid=1 interpolation=Bilinear stack"); // rotate image based on line ROI from MIPs
+				// -> then rotate -90 to align in y
+				run("Rotate 90 Degrees Left");
+				rot = rot01 - 90;
+		
+					
+			///// 2 bottom left quadrant (-90 to -180)
+			}else if (MeasAngle <= -90 && MeasAngle >= -180){ 
+				// rotate to -180 -> then +90 
+				betrag = abs(MeasAngle);
+				rot01 = (-180 - betrag);
+				run("Rotate... ", "angle=" + rot01 + " grid=1 interpolation=Bilinear stack"); // rotate image based on line ROI from MIPs
+				// -> then rotate 90 to align in y
+				run("Rotate 90 Degrees Right");
+				rot = rot01 + 90;
+					
+			///// 3 top left quadrant (180 to 90)	
+			}else if (MeasAngle <= 180 && MeasAngle >= 90){ 
+				// rotate to 90
+				betrag = abs(MeasAngle);
+				rot = -(90 - betrag);
+				run("Rotate... ", "angle=" + rot + " grid=1 interpolation=Bilinear stack"); // rotate image based on line ROI from MIPs
+				
+			///// 4 top right quadrant (90 to 0)	
+			}else{
+				// rotate to 90
+				betrag = abs(MeasAngle);
+				rot = -(90 - betrag);
+				run("Rotate... ", "angle=" + rot + " grid=1 interpolation=Bilinear stack"); // rotate image based on line ROI from MIPs
+			}
+				
+		//	saveAs("Tiff", xyDir + "rot_" + filelist[i]); 
+			selectWindow("Results"); // close RoiSetLine results table
+			run("Close");
+				
+		///// Bounding Box /////
+			// rotate line ROI
+			roiManager("Select", r);
+			run("Rotate...", "rotate angle=" + rot);
+			roiManager("Update");
+				
+			run("Measure"); // measure the angle of line ROI for splitting L R box
+		
+			// what slice ROI was drawn on
+			MeasZPos = getResult("Slice");
+			
+			// calculate box width and check image is wide enough
+			MeasXum = getResult("BX"); // measured X-position from LineROI as centrepoint
+			MeasX = round(MeasXum / pixelWidth); // vx
+			
+			MeasYum = getResult("BY"); // measured X-position from LineROI as centrepoint
+			MeasY = round(MeasYum / pixelHeight); // vx == omege
+			
+			MeasLengthum = getResult("Length"); // measured length of line ROI after Rotation
+			MeasLength = round(MeasLengthum / pixelHeight); // vx
+			sigma = round(additionBelow / pixelHeight); // is the additional length added at the bottom for EC analysis
+		
+			remainingImg = (height - MeasY) + MeasLength;
+		
+			print(f, title + " \t" + MeasLengthum);
+		
+			// check for length of box in vx
+			if (remainingImg >= sigma){
+				BoxHeight = MeasLength + sigma;
+			}else{
+				BoxHeight = MeasLength;
+			}
+				
+	
+			// work with px not um
+			widthUM = width * pixelWidth;
+			// check box sizes
+			B = width - MeasX;		// how much space there is to the right
+			A = width - B;
+			// make box 60um wide
+			boxHalfWidth = round(xySizeHalf / pixelWidth); // xySizeHalf is in microns >> boxHalfWidth is in vx
+			TotalBoxWidth = round(2 * boxHalfWidth); // vx
+			
+			if (B >= boxHalfWidth){ // box fits right
+				if (A >= boxHalfWidth) { // box fits left
+					LStart = MeasX - boxHalfWidth;		
+				}else{ // box does not fit to the left
+					LStart = 0;  // start at the very left
+				}
+			}else{ // box does not fit to the right
+				LStart = width - TotalBoxWidth;
+			}
+		
+			selectWindow("Results"); // close RoiSetLine results table
+			run("Close");
+			// 	r++; // counter for ROI in ROIset - remove this here for multiple ROIs in one image 
+		
+			// make box
+			
+			setTool("rectangle");	
+			makeRectangle(LStart, MeasY, TotalBoxWidth, BoxHeight); // x,y,w,h
+			run("Crop");
+
 				
 			// save as tiff "xy-reduced_"
-			saveAs("Tiff", xyDir + "xy-reduced_" + short + roiC); 
-		
+			saveAs("Tiff", xyDir + "xy-reduced_" + short + "_" + roiC); 
+			
+			
+
+			
 			// make and save MIP
 			run("Z Project...", "projection=[Max Intensity]");
-			saveAs("Jpeg", xyDirMIPs + "MIPxy-reduced_" + short + roiC); 
+
+			// debug
+			roiManager("Select", roi);
+			run("Flatten");
+
+			
+			saveAs("Jpeg", xyDirMIPs + "MIPxy-reduced_" + short + "_" + roiC); 
 			close();
 			
-			selectWindow("xy-reduced_" + short + roiC + ".tif");
+			selectWindow("xy-reduced_" + short + "_" + roiC + ".tif");
 		 
 			zReduction(sortedFilelist[i]); // moved this here for multiple ROIs in the same image
 
@@ -155,12 +271,55 @@ function xyReduction(title) {
 
 ///// zReduction function
 function zReduction(title) { 
-	// DO SOMETHING
-	saveAs("Tiff", zDir + "z-reduced_" + short + roiC); 
+	getDimensions(width, height, channels, slices, frames);
+	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
+
+	// z-depth - check if stack overall large enough
+	NrSlices10umThick = zDepth / voxelDepth;
+	// number of slices is enough
+	if (NrSlices10umThick <= slices) {
+		SubStackSlices = round(NrSlices10umThick);
+	}else{ // not enough slices
+		SubStackSlices = slices;
+		print(filelist[i] + "not enough slices for substack");
+	}
+
+	// for 3D ROI - select slices up and down from drawn ROI (this ROI needs to be drawn in 3D)
+// MeasZPos // this is the slice position of the ROI
+// check if enough slices up and down from MeasZPos
+// SubStackSlices // that's the number of slices that we need
+	// work with slices
+	Top = SubStackSlices - MeasZPos;		// how much space there is to the top (slice 1)
+	Bottom = SubStackSlices - Top;
+	
+	// make box 60um wide
+	stackHalf = round(SubStackSlices / 2);
+	
+	if (Top >= stackHalf){ // box fits Top
+		if (Bottom >= stackHalf) { // box fits Bottom
+			bottomStart = MeasZPos - stackHalf;		
+		}else{ // box does not fit to the Bottom
+			bottomStart = 0;  // start at the very Bottom
+		}
+	}else{ // box does not fit to the Top
+		bottomStart = slices - SubStackSlices;
+	}
+
+TopStart = slices - bottomStart;
+
+// make substack from there
+	
+	if (channels == 1) {
+		run("Make Substack...", "  slices=1-" + TopStart);
+	}else{
+		run("Make Substack...", "channels=1-" + channels + " slices=1-" + TopStart);			
+	}
+
+	saveAs("Tiff", zDir + "z-reduced_" + short + "_" + roiC); 
 
 	// make and save MIP
 	run("Z Project...", "projection=[Max Intensity]");
-	saveAs("Jpeg", zDirMIPs + "MIPz-reduced_" + short + roiC); 
+	saveAs("Jpeg", zDirMIPs + "MIPz-reduced_" + short + "_" + roiC); 
 	
 }
 
