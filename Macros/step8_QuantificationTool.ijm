@@ -71,6 +71,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 	print("processing ... " + sortedFilelist[i]);
 
 	open(path + sortedFilelist[i]);
+	run("Keep Largest Region"); // from MorpholibJ to keep largest region and remove anything unconnected
 	Quantification(sortedFilelist[i]); // call function quantification
 	
 	close("*");

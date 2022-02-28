@@ -64,13 +64,15 @@ for (i=0; i< sortedFilelist.length; i++) {
 	wait(2000);
 	run("Median 3D...", "x=2 y=2 z=2");
 	wait(2000);
-	
+	saveAs("Tiff", OutputDir + "PrePro_" + sortedFilelist[i]); 
+
 	// segmentation
 	setSlice(halfPos);
 	run("Enhance Contrast", "saturated=0.35");
 	wait(1000);
 	run("Threshold...");
-	setAutoThreshold("Triangle dark stack");
+
+	call("ij.plugin.frame.ThresholdAdjuster.setMode", "B&W");
 	setOption("BlackBackground", false);
 	run("Convert to Mask", "method=Otsu background=Dark");
 
