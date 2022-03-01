@@ -61,6 +61,7 @@ run("Set Measurements...", "area mean standard min centroid center perimeter bou
 var imgName="";
 var shortTitle = "";
 var column_label = "";
+var halfPos = 10;
 
 ///// open images from inputfolder for overall quantification, EDM, and skeletonization
 for (i=0; i< sortedFilelist.length; i++) {   
@@ -71,7 +72,17 @@ for (i=0; i< sortedFilelist.length; i++) {
 	print("processing ... " + sortedFilelist[i]);
 
 	open(path + sortedFilelist[i]);
+
+	getDimensions(width, height, channels, slices, frames);
+
+	halfPos = round(slices / 2);
+	setSlice(halfPos);
+	
+	run("Make Binary", "method=Default background=Default");
 	run("Keep Largest Region"); // from MorpholibJ to keep largest region and remove anything unconnected
+	wait(3000);
+	
+	
 	Quantification(sortedFilelist[i]); // call function quantification
 	
 	close("*");
@@ -138,6 +149,8 @@ function Quantification(title){
 	getDimensions(width, height, channels, slices, frames);
 	getPixelSize(unit,pixelWidth,pixelHeight,voxelDepth);
 	volVox = pixelWidth * pixelHeight * voxelDepth;
+	setSlice(halfPos);
+
 
 	run("Histogram", "stack");
 	// [255] is MG Vox
@@ -153,10 +166,13 @@ function Quantification(title){
 	// surface smoothing
 	run("Median 3D...", "x=6 y=6 z=6");
 	wait(3000);
+
+	setSlice(halfPos);
 	run("Make Binary", "method=Default background=Default"); // binarize after smoothing
 
 	// 3D EDM for thickness
 	run("Duplicate...", "title=For3DEDM duplicate");
+	wait(2000);
 	selectWindow("For3DEDM");
 	run("Geometry to Distance Map", "threshold=1");
 	run("Green Fire Blue"); // assign LUT green-fire-blue

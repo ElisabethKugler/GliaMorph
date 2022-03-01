@@ -84,7 +84,9 @@ for (e=0; e< filelistMGs.length; e++) {
 		saveAs("Tiff", OutDir + "MAX_" + name);
 		
 		// smoothen and enhance before segmenting with Threshold
-		run("Median...", "radius=3");
+		run("Median...", "radius=2 stack");
+
+		
 		run("Enhance Local Contrast (CLAHE)", "blocksize=127 histogram=256 maximum=3 mask=*None* fast_(less_accurate)");
 		// segmentation with Otsu Threshold
 		run("Threshold...");
@@ -95,7 +97,7 @@ for (e=0; e< filelistMGs.length; e++) {
 	
 		run("Invert", "stack"); // it measures the white as MG endfeet
 		saveAs("Tiff", OutDir + "MAX_TH_" + name);
-		run("Invert", "stack"); 
+	//	run("Invert", "stack"); 
 		
 		// for timelapse - need to iterate over the individual timepoints
 		if (frames > 1){ // if more than one timeframe it is a timelapse
