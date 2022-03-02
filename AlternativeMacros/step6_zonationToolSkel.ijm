@@ -75,7 +75,7 @@ if (IntPlot==choices[0]){ // yes
 			imageHeight = height * pixelHeight; 
 			imageHeightwoSigma = imageHeight - sigma;
 			
-			run("Make Binary", "method=Default background=Default");
+			//run("Make Binary", "method=Default background=Default");
 
 			print(f, img + " \t"  + imageHeight + " \t" + imageHeightwoSigma);
 			
