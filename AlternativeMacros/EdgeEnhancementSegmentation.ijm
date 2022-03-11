@@ -84,7 +84,8 @@ for (i=0; i< sortedFilelist.length; i++) {
 	selectWindow("Symmetry_smoothed_10");
 // re-set original image values
 	run("Properties...", "channels=" + preChannels + " slices=" + preSlices + " frames=" + preFrames +" unit=µm pixel_width=" + prePixelWidth + " pixel_height=" + prePixelHeight + " voxel_depth=" + preVoxelDepth);
-	
+	saveAs("Tiff", OutputDir + "preproc_" + sortedFilelist[i]); 
+
 	setSlice(halfPos);
 	// run("Enhance Contrast", "saturated=0.35");
 	
