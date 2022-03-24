@@ -55,6 +55,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 	halfPos = round(slices / 2);
 	setSlice(halfPos);
 	run("Enhance Contrast", "saturated=0.35");
+	run("8-bit");
 
 	// bleach correction in z direction as there is significant signal decay axially w confocal images
 	run("Bleach Correction", "correction=[Simple Ratio] background=0");
