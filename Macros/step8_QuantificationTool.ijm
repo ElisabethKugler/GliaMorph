@@ -97,26 +97,29 @@ close("Results");
 // 10012022 - try zonationTool TH and skel outside first for loop to see if that fixes issue with overwriting and actually appends zonationTool results
 counter = 0;
 for (j=0; j< sortedFilelist.length; j++) {
-	// open TH image
-	open(path + sortedFilelist[j]);
-	
-	imgName=getTitle();
-	shortTitle = replace(imgName, ".tif", "");
-	column_label = imgName;
-	
-	// plot texture segmented/TH image
-	wait(8000);
-	plotIntensity(sortedFilelist[j], outZone, "Average", "Average"); // filename, inputFolder, outputFolder
-	
-	// plot texture of skeletonized image	
-	open(OutputDirSkel + "Skel_" + sortedFilelist[j]);
-	wait(8000);
-	selectWindow("Skel_" + sortedFilelist[j]);
-	plotIntensity("Skel_" + sortedFilelist[j], OutputDirSkel, "Max", "Average"); // filename, inputFolder, outputFolder
-	close("*");
-	
-	counter++;
+	if (endsWith(sortedFilelist[j], ".tif")) {
+		// open TH image
+		open(path + sortedFilelist[j]);
+		
+		imgName=getTitle();
+		shortTitle = replace(imgName, ".tif", "");
+		column_label = imgName;
+		
+		// plot texture segmented/TH image
+		wait(8000);
+		plotIntensity(sortedFilelist[j], outZone, "Average", "Average"); // filename, inputFolder, outputFolder
+		
+		// plot texture of skeletonized image	
+		open(OutputDirSkel + "Skel_" + sortedFilelist[j]);
+		wait(8000);
+		selectWindow("Skel_" + sortedFilelist[j]);
+		plotIntensity("Skel_" + sortedFilelist[j], OutputDirSkel, "Max", "Average"); // filename, inputFolder, outputFolder
+		close("*");
+		
+		counter++;
+	}
 }
+
 
 
 run("Close All");
