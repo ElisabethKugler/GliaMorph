@@ -71,8 +71,13 @@ for (i=0; i< sortedFilelist.length; i++) {
 	run("Enhance Contrast", "saturated=0.35");
 	wait(1000);
 	run("Threshold...");
-
+/*
 	call("ij.plugin.frame.ThresholdAdjuster.setMode", "B&W");
+	setOption("BlackBackground", false);
+	run("Convert to Mask", "method=Otsu background=Dark");
+*/
+
+	setThreshold(15, 255);
 	setOption("BlackBackground", false);
 	run("Convert to Mask", "method=Otsu background=Dark");
 
