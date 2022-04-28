@@ -51,6 +51,24 @@ This GitHub repository will be maintained until at least 2023 by Elisabeth Kugle
 
 - **step8_QuantificationTool.ijm**: Quantification of MG features in segmented images
 
+
+## Required Fiji Update sites and Extensions
+# Fiji Update Sites
+1.	“Fiji > Help > Update > Manage update sites”
+2.	Select “3D ImageJ Suite”, “Neuroanatomy”, and “IJBP-Plugins” 
+3.	Click “Close” 
+4.	Click “Apply Changes”. 
+
+# Extensions
+Both are required for the point spread function (PSF) deconvolution. 
+
+a) Extension 1: Diffraction PSF 3D to generate a theoretical PSF: details at https://www.optinav.info/Iterative-Deconvolve-3D.htm
+Download “Diffraction_PSF_3D.class” from https://github.com/ElisabethKugler/GliaMorph (found under “other”) - copy and paste this it into Fiji > Plugin folder > restart Fiji. Check if "Plugins > Diffraction PSF 3D" is there.
+(Author: Bob Dougherty; Permission: 13.12.2021 - via email between Bob Dougherty and Elisabeth Kugler; Link: https://www.optinav.info/Diffraction-PSF-3D.htm; Licence: Copyright (c) 2005, OptiNav, Inc.All rights reserved).
+
+b) Extension 2: DeconvolutionLab2 for PSF deconvolution (Sage et al., 2017): follow the installation guide http://bigwww.epfl.ch/deconvolution/deconvolutionlab2/.
+
+
 ## #GliaMorph: Minimum Example Data 29112021 (see protocol for details)
 Acquired by Dr Ryan MacDonald at the Institute of Ophthalmology, University College London (http://zebrafishucl.org/macdonald-lab).
 Processed by Dr Elisabeth Kugler at the Institute of Ophthalmology, University College London (https://www.elisabethkugler.com/).
