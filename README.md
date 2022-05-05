@@ -9,9 +9,11 @@ Example Data: **Data Link**: https://zenodo.org/record/5747597 **DATA DOI**: 10.
 
 Minimum Example Data 29112021: **Data Link**: https://zenodo.org/record/5735442 **DATA DOI**: 10.5281/zenodo.5735442
 
+YouTube Screencasts: https://www.youtube.com/hashtag/gliamorph (recorded by Sara Beqiri and Karim Nizam, 2022)
+
 **Code Author**: Elisabeth Kugler <br/>
-**Project Leads**: Elisabeth Kugler and Ryan MacDonald <br/>
-**Project Contributors**: Eva-Maria Breitenbach (tester), Alicia Carrington (data and tester), Isabel Bravo (data and tester), Cyril Eleftheriou (data and tester), Alessandro Felder (code advice), and Robert Haase (code advice). <br/>
+**Project Leads**: Elisabeth Kugler (code, formal analysis, supervision) and Ryan MacDonald (data, resources, supervision) <br/>
+**Project Contributors**: Eva-Maria Breitenbach (tester), Alicia Carrington (data and tester), Isabel Bravo (data and tester), Stefania Marcotti (code: https://github.com/OakesLab/AFT-Alignment_by_Fourier_Transform), Brian M. Stramer (resources), and Pierre Mattar (data and resources). <br/>
 **Contact**: kugler.elisabeth[at]gmail.com<br/>
 
 BSD 3-Clause License <br/>
