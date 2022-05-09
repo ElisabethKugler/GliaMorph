@@ -2,7 +2,7 @@
 
 GliaMorph Toolkit to process and analyse Müller glia morphology (implemented as Fiji Macros to allow modular application).
 
-BioRxiv manuscript - GliaMorph biological application: XXX
+BioRxiv manuscript - GliaMorph biological application: https://www.biorxiv.org/content/10.1101/2022.05.05.490765v1
 
 BioRxiv manuscript - step-by-step protocol: XXX <br/>
 Example Data: **Data Link**: https://zenodo.org/record/5747597 **DATA DOI**: 10.5281/zenodo.5747597
