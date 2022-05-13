@@ -78,6 +78,8 @@ if (IntPlot==choices[0]){ // yes
 
 			print(f, img + " \t"  + imageHeight + " \t" + imageHeightwoSigma);
 			
+			run("8-bit"); // so one can run it on deconvDir folder
+			
 			// 05032021 pre-processing test to improve quality
 			// z-dimension bleach/intensity correction
 			run("Bleach Correction", "correction=[Simple Ratio] background=0");
