@@ -177,6 +177,10 @@ function DAPICounter(title) {
 	wait(10000);
 	// this were "xxx::Segmented" comes from - we do not actually need/use that
 	
+	// run("16-bit");
+//	Ext.Manager3D_AddImage();
+//	Ext.Manager3D_Measure();
+	
 	// nr of results is the nr of nuclei
 	DAPINr = nResults();
 
