@@ -9,6 +9,7 @@
 (b) performs preprocessing and segmentation
 (c) will perform synapse terminal and MG density analysis
 (d) will perform synapse terminal and MG overlap analysis
+(e) you can close all windows once you receive the message "Macro finished."
 
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 // 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
@@ -102,9 +103,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 			// segment MG IPL protrusion
 			selectImage("MGCrop"); 
 			
-			//----  segmentation of MG data
-//-- TODO: this needs further testing to line 98	
-			
+			//----  segmentation of MG data			
 			// bleach correction in z direction as there is a significant signal decay axially
 			run("Bleach Correction", "correction=[Simple Ratio] background=0");
 			selectWindow("DUP_MGCrop");
@@ -130,8 +129,6 @@ for (i=0; i< sortedFilelist.length; i++) {
 			setOption("BlackBackground", false);
 			run("Convert to Mask", "method=Otsu background=Dark");
 
-//  78 to here
-			
 			saveAs("Tiff", OutputIx + "MGSegm_" + nameShort); 
 			rename("MGSegm");
 
@@ -150,18 +147,17 @@ for (i=0; i< sortedFilelist.length; i++) {
 			imageCalculator("AND create stack", "Syn","MGSegm");
 			selectWindow("Result of Syn");
 			
-// CALCULATE THE NUMBER OF SYNAPSES CONTACTED
-			run("3D Objects Counter", "threshold=128 slice=29 min.=5 max.=39140010 objects surfaces centroids centres_of_masses statistics summary");
-			selectWindow("Statistics for Result of Syn");
-			saveAs("Results", OutputIx + "3DObjCounter_" + nameShort + ".csv");
-
-			
-			
 			saveAs("Tiff", OutputIx + "ImgCalc_TH_" + nameShort); 
 			run("Z Project...", "projection=[Max Intensity]");
 			saveAs("Jpeg", OutputIx + "MAX_ImgCalc_TH_" + nameShort); 
 			close();
-
+			
+// CALCULATE THE NUMBER OF SYNAPSES CONTACTED
+			selectWindow("ImgCalc_TH_" + nameShort);
+			rename("Result of Syn");
+			run("3D Objects Counter", "threshold=128 slice=29 min.=5 max.=39140010 objects surfaces centroids centres_of_masses statistics summary");
+			selectWindow("Statistics for Result of Syn");
+			saveAs("Results", OutputIx + "3DObjCounter_" + nameShort + ".csv");
 
 			// calculate M1 and M2
 			// calculate voxels in image with overlap
@@ -203,7 +199,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 }
 
 selectWindow("Log");
-saveAs("Results", OutputIx + "3DObjCounter_analysisSummary.csv");
+saveAs("Text", OutputIx + "3DObjCounter_analysisSummary.txt");
 
 print("Output Directory: " + OutputIx);
 
