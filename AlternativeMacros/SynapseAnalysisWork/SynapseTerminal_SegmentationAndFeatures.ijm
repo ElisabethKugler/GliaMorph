@@ -114,8 +114,8 @@ for (i=0; i< sortedFilelist.length; i++) {
 		}
 }
 
-selectWindow("Log");
-saveAs("Text", OutputIx + "3DObjCounter_analysisSummary.txt");
+//selectWindow("Log");
+//saveAs("Text", OutputIx + "3DObjCounter_analysisSummary.txt");
 
 print("Output Directory: " + OutputDirpathIPL);
 
