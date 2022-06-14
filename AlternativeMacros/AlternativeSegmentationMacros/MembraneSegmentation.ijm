@@ -69,8 +69,8 @@ run("Convert to Mask", "method=Otsu background=Dark");
 	
 	// fill 3D holes
 	//run("3D Fill Holes");
-	run("Fill Holes", "stack");
-	wait(500);
+//	run("Fill Holes", "stack");
+//	wait(500);
 
 	saveAs("Tiff", OutputDir + "TH_" + sortedFilelist[i]); 
 	run("Z Project...", "projection=[Max Intensity]");
