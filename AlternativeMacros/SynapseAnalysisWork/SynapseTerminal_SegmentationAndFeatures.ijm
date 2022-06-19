@@ -11,7 +11,10 @@ All rights reserved.
 
 (1) input images are single-channel (i.e. synapse staining like Ribeye) 3D stacks
 (2) iterate over images in the folder 
-(3) identify IPL
+(3) identify IPL 
+-- if you select automatically it will select largest / dense region
+-- for manual: draw one rectangle ROI and save that as "ROI.roi" in the input folder 
+(better for inconsistent / weak staining; but assumes similarity between samples)
 (4) segmentation of synapse terminals
 (5) synapse terminal quantification
 (6) write outputs
@@ -22,6 +25,18 @@ All rights reserved.
 // 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+
+// choices
+choices = newArray("automatically", "pre-saved ROI");
+Dialog.create("How do you want to identify the IPL?");
+Dialog.addChoice("Select how to identify IPL:", choices); 
+// create dialog
+Dialog.show();
+
+// parse choice of IPL selection
+IPLident = Dialog.getChoice();
+
 
 // ---- prompt user for path to input images
 // input images are single-channel (i.e. synapse staining like Ribeye) 3D stacks
@@ -36,7 +51,6 @@ File.makeDirectory(OutputDirpathIPL);
 
 setBackgroundColor(0, 0, 0);
 setForegroundColor(255, 255, 255);
-
 
 // varibables for IPL ROI selection (global)
 var j = 0;
@@ -54,9 +68,17 @@ for (i=0; i< sortedFilelist.length; i++) {
 			open(pathIPL + sortedFilelist[i]);
 			selectWindow(sortedFilelist[i]);
 			
-			// call fct to identify IPL
-			IPLidentification(sortedFilelist[i]);
-		
+			if (IPLident == choices[0]){
+				// call fct to identify IPL
+				IPLidentification(sortedFilelist[i]);
+			}else{
+				// reduce to a selected ROI
+				open(pathIPL + "ROI.roi");
+				run("Crop");
+				// in this ROI - select IPL
+				IPLidentification(sortedFilelist[i]);
+			}
+
 			img=getTitle();
 			rename("imgN");
 

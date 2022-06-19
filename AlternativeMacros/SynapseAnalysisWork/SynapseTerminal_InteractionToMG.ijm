@@ -18,10 +18,24 @@
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
+// choices
+choices = newArray("automatically", "pre-saved ROI");
+Dialog.create("How do you want to identify the IPL?");
+Dialog.addChoice("Select how to identify IPL:", choices); 
+// create dialog
+Dialog.show();
+
+// parse choice of IPL selection
+IPLident = Dialog.getChoice();
+
+
 // prompt for folder with segmented synapse terminals
 pathIPL = getDirectory("Input Folder: OutputDirIPL from Synapse Terminal Segmentation"); 
 filelistIPL = getFileList(pathIPL);
 sortedFilelist = Array.sort(filelistIPL);
+
+pathROI = getDirectory("Where is the ROI? (select any folder if none)");
 
 print("Input Directory Segmented Synapse Terminals: " + pathIPL);
 
@@ -88,11 +102,23 @@ for (i=0; i< sortedFilelist.length; i++) {
 			// select MG window
 			selectImage("MG"); 
 		
-			// open ROI 
-			roiManager("Open", pathIPL + nameShortROI + ".roi");
-			// crop MG to the correct IPL size, using ROIs from step7a_synapseTerminalSegmentationAndFeatures.ijm
-			roiManager("Select", 0);
-			run("Crop");
+			if (IPLident == choices[0]){
+				// open ROI 
+				roiManager("Open", pathIPL + nameShortROI + ".roi");
+				roiManager("Select", 0);
+				run("Crop");
+
+			}else{
+				// reduce to a selected ROI
+				open(pathROI + "ROI.roi");
+				run("Crop");
+				roiManager("Open", pathIPL + nameShortROI + ".roi");
+				roiManager("Select", 0);
+				run("Crop");
+			}		
+		
+		
+			selectImage("MG"); 
 			
 			saveAs("Tiff", OutputIx + "MGCrop_" + nameShort); 
 			rename("MGCrop");
@@ -121,11 +147,14 @@ for (i=0; i< sortedFilelist.length; i++) {
 			saveAs("Tiff", OutputIx + "preproc_" + sortedFilelist[i]); 
 		
 			setSlice(halfPos);
-			// run("Enhance Contrast", "saturated=0.35");
+			run("Subtract Background...", "rolling=100 stack");
+			wait(3000);
+			run("Enhance Contrast", "saturated=0.35");
 			
 			run("8-bit");
 			run("Threshold...");
-			setThreshold(4, 255);
+			setAutoThreshold("Default dark");
+			//setThreshold(4, 255);
 			setOption("BlackBackground", false);
 			run("Convert to Mask", "method=Otsu background=Dark");
 
