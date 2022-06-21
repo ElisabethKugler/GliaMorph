@@ -46,8 +46,14 @@ if (IntPlot==choices[0]){ // yes
 	filelist = getFileList(path);
 	sortedFilelist = Array.sort(filelist);
 	
-	ZonationToolDir = path + "/ZonationTool/"; 
-	File.makeDirectory(ZonationToolDir);
+	if (ImgNorm == choices[0]){ // yes
+		ZonationToolDir = path + "/ZonationTool-Normalized/"; 
+		File.makeDirectory(ZonationToolDir);
+	}else{ // not normalized
+		ZonationToolDir = path + "/ZonationTool-NotNormalized/"; 
+		File.makeDirectory(ZonationToolDir);
+	}
+
 	
 	f = File.open(ZonationToolDir + "ZonationResults.txt");
 	print(f, "Filename" + " \t"  + "ImageHeight" + " \t" + "LengthOfROI_HeightWOSigma");
