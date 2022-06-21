@@ -163,8 +163,10 @@ for (i=0; i< sortedFilelist.length; i++) {
 
 			// select the segmented IPL synapse terminals and make that image binary
 			selectWindow(name);
+			run("Enhance Contrast", "saturated=0.35");
+			run("Enhance Contrast", "saturated=0.35");
+			setSlice(halfPos);
 			run("8-bit");
-			setSlice(10);
 			setThreshold(1, 255);
 			setOption("BlackBackground", false);
 			run("Convert to Mask", "method=Otsu background=Dark");
@@ -224,6 +226,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 
 			print(outFile, nameShort + "\t" + OverlapVol + "\t" + MGVol + "\t" + MGDen + "\t" + SynVol + "\t" + SynDen + "\t" + M1MG + "\t" + M2Syn);		
 			run("Close All");
+			OverlapVol = 0;
 		}
 }
 
