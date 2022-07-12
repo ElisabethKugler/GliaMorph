@@ -40,6 +40,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 	close();
 	selectWindow("C2-" + "img");
 */	
+	run("8-bit");
 	// bleach correction in z direction as there is a significant signal decay axially
 	run("Bleach Correction", "correction=[Simple Ratio] background=0");
 	//selectWindow("DUP_C2-" + "img");
