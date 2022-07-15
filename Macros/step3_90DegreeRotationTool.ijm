@@ -32,6 +32,10 @@ sortedFilelist = Array.sort(filelist);
 outputFolder = path + "/90DegreeRotated/"; 
 File.makeDirectory(outputFolder);
 
+outputFolderMIPs = outputFolder + "/MIPs/"; 
+File.makeDirectory(outputFolderMIPs);
+
+
 setBatchMode(true); //batch mode on
 print("Input Directory: " + path);
 
@@ -51,14 +55,14 @@ for (i=0; i< sortedFilelist.length; i++) {
 			saveAs("Tiff", outputFolder + "rot_" + sortedFilelist[i]); 
 			
 			run("Z Project...", "projection=[Max Intensity]");
-			saveAs("Tiff", outputFolder + "MIP-" + sortedFilelist[i]); 
+			saveAs("Tiff", outputFolderMIPs + "MIP-" + sortedFilelist[i]); 
 			
 		}else if (RotC == RotChoice[2]){ // left (anti-clockwise)
 			run("Rotate 90 Degrees Left");
 			saveAs("Tiff", outputFolder + "rot_" + sortedFilelist[i]); 
 			
 			run("Z Project...", "projection=[Max Intensity]");
-			saveAs("Tiff", outputFolder + "MIP-" + sortedFilelist[i]); 
+			saveAs("Tiff", outputFolderMIPs + "MIP-" + sortedFilelist[i]); 
 		}else{ // no rotation
 			print("No rotation selected");
 			exit;
