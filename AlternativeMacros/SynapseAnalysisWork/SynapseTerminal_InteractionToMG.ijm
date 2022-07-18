@@ -54,7 +54,7 @@ File.makeDirectory(OutputIx);
 
 // create output file for measurements
 outFile = File.open(OutputIx + "OverlapMeasurements.txt");
-print(outFile, "file name" + "\t" + "OverlapVol [um3]" + "\t" + "MGVol [um3]" + "\t" + "MG Density [%]" + "\t" + "SynVolume  [um3]" + "\t" + "Syn Density [%]" + "\t" + "M1-MG" + "\t" + "M2-Syn");	
+print(outFile, "file name" + "\t" + "OverlapVol [um3]" + "\t" + "BGVol [um3]" + "\t" + "TotalVol [um3][um3]" + "\t" + "MGVol [um3]" + "\t" + "MG Density [%]" + "\t" + "SynVolume  [um3]" + "\t" + "Syn Density [%]" + "\t" + "M1-MG" + "\t" + "M2-Syn");	
 
 setForegroundColor(255, 255, 255); 
 setBackgroundColor(0, 0, 0); 
@@ -185,6 +185,8 @@ for (i=0; i< sortedFilelist.length; i++) {
 			
 // CALCULATE THE NUMBER OF SYNAPSES CONTACTED
 			selectWindow("ImgCalc_TH_" + nameShort);
+			
+			
 			rename("Result of Syn");
 			run("3D Objects Counter", "threshold=128 slice=29 min.=5 max.=39140010 objects surfaces centroids centres_of_masses statistics summary");
 			selectWindow("Statistics for Result of Syn");
@@ -192,6 +194,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 
 			// calculate M1 and M2
 			// calculate voxels in image with overlap
+			selectWindow("Result of Syn");
 			run("Histogram", "stack");
 			Plot.getValues(values, counts);
 			OverlapVox = counts[255]; // black 					
@@ -203,9 +206,13 @@ for (i=0; i< sortedFilelist.length; i++) {
 			selectImage("MGSegm");
 			run("Histogram", "stack");
 			Plot.getValues(values, counts);
-			MGVox = counts[255]; // black 					
+			MGVox = counts[255]; // black
+			BGVox = counts[0]; 					
 			close(); // histogram			
 			MGVol = voxVol * MGVox; // voxel to volume [um]
+			BGVol = voxVol* BGVox;
+			TotalVx = MGVox + BGVox;
+			TotalVol = voxVol * TotalVx;
 			
 			MGDen = (MGVol * 100) / imageVol;
 			
@@ -224,7 +231,7 @@ for (i=0; i< sortedFilelist.length; i++) {
 			M2Syn = OverlapVol/SynVol;
 
 
-			print(outFile, nameShort + "\t" + OverlapVol + "\t" + MGVol + "\t" + MGDen + "\t" + SynVol + "\t" + SynDen + "\t" + M1MG + "\t" + M2Syn);		
+			print(outFile, nameShort + "\t" + OverlapVol + "\t" + BGVol + "\t" + TotalVol + "\t" + MGVol + "\t" + MGDen + "\t" + SynVol + "\t" + SynDen + "\t" + M1MG + "\t" + M2Syn);		
 			run("Close All");
 			OverlapVol = 0;
 		}
