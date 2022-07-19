@@ -15,6 +15,7 @@
 
 path = getDirectory("Input Folder"); 
 filelist = getFileList(path);
+sortedFilelist = Array.sort(filelist);
 
 outputFolder = path + "/SegmentationTesting/";
 File.makeDirectory(outputFolder);
@@ -22,11 +23,11 @@ File.makeDirectory(outputFolder);
 outputFolderMIPs = outputFolder + "/MIPs/";
 File.makeDirectory(outputFolderMIPs)
 
-for (i=0; i< filelist.length; i++) {   
-	if (endsWith(filelist[i], ".tif")) {
+for (i=0; i< sortedFilelist.length; i++) {   
+	if (endsWith(sortedFilelist[i], ".tif")) {
 		// open img
-		open(path + filelist[i]);
-		selectWindow(filelist[i]);
+		open(path + sortedFilelist[i]);
+		selectWindow(sortedFilelist[i]);
 
 		// go to middle of stack (auto-threshold selection works best when in centre)
 		getDimensions(width, height, channels, slices, frames);
@@ -37,9 +38,30 @@ for (i=0; i< filelist.length; i++) {
 		// convert to 8-bit
 		run("8-bit");
 		
-	//	preprocessing(filelist[i]); // function to smoothen image and remove background
-		thresholding(filelist[i]); // function to test different thresholding approaches for image segmentation
+		// function to smoothen image and remove background
+		preprocessing(sortedFilelist[i]); 
+		wait(2000);
 		
+		// call functions for segmentation - after testing, you can comment out what you don't need
+		SimpleSeg(sortedFilelist[i]);
+		wait(2000);
+		
+		Hysterisis(sortedFilelist[i]);
+		wait(2000);
+		
+		Otsu(sortedFilelist[i]);
+		wait(2000);
+		
+		Moments(sortedFilelist[i]);
+		wait(2000);
+		
+		Percentile(sortedFilelist[i]);
+		wait(2000);
+		
+		MaxEntropy(sortedFilelist[i]);
+		wait(2000);
+		
+		close("*");
 	}
 }
 
@@ -59,8 +81,9 @@ function preprocessing(title) {
 }
 
 //-- Testing different thresholding methods
-function thresholding(title) {
-	/////-- 3D image analysis suite
+
+/////-- 3D image analysis suite
+function SimpleSeg(title){
 	//--3D simple segmentation
 	selectWindow(filelist[i]);
 	run("Duplicate...", "title=Proc duplicate");
@@ -74,78 +97,91 @@ function thresholding(title) {
 	saveAs("Tiff", outputFolder + "3DSimpleSeg_" + filelist[i]); 
 	run("Z Project...", "projection=[Max Intensity]");
 	saveAs("Jpeg", outputFolderMIPs + "MAX_3DSimpleSeg20-0_" + filelist[i]);
-	
+	close("MAX_3DSimpleSeg20-0_" + filelist[i]);
+	close("3DSimpleSeg_" + filelist[i]);
+}
 
+function Hysterisis(title) { 
 	//-- hysterisis TH
 	selectWindow(filelist[i]);
 	run("Duplicate...", "title=Proc duplicate");
 	selectWindow("Proc");
-	run("3D Hysteresis Thresholding", "high=128 low=50 show labelling"); // low and high can be changed
+	run("3D Hysteresis Thresholding", "high=128 low=50 show labelling"); // low and high can be changed 
 	selectWindow("Proc_Multi");
 	
 	run("Make Binary", "method=Default background=Default");
 	saveAs("Tiff", outputFolder + "3DHyst_" + filelist[i]); 
 	//run("Invert", "stack");
 	run("Z Project...", "projection=[Max Intensity]");
-	saveAs("Jpeg", outputFolderMIPs + "MAX_3DHyst128-50_" + filelist[i]);
-	close();
-	close();
-	
-	//////-- Fiji Global Auto Thresholding
+	saveAs("Jpeg", outputFolderMIPs + "MAX_3DHyst_" + filelist[i]);
+	close("MAX_3DHyst128-50_" + filelist[i]);
+	close("3DHyst_" + filelist[i]);
+}
+
+
+//////-- Fiji Global Auto Thresholding
+
+function Otsu(title) { 
 	//-- Otsu
 	selectWindow(filelist[i]);
 	run("Duplicate...", "title=Proc duplicate");
 	selectWindow("Proc");
 	setAutoThreshold("Otsu");
-	//setThreshold(0, 20);
+	//setThreshold(0, 20); // can be changed 
 	setOption("BlackBackground", false);
 	run("Convert to Mask", "method=Otsu background=Light");
 	run("Invert", "stack");
-	saveAs("Tiff", outputFolder + "Otsu0-20_" + filelist[i]); 
+	saveAs("Tiff", outputFolder + "Otsu_" + filelist[i]); 
 	run("Z Project...", "projection=[Max Intensity]");
-	saveAs("Jpeg", outputFolderMIPs + "MAX_Otsu0-20_" + filelist[i]);
-	close();
-	close();
-	
+	saveAs("Jpeg", outputFolderMIPs + "MAX_Otsu-_" + filelist[i]);
+	close("MAX_Otsu-_" + filelist[i]);
+	close("Otsu_" + filelist[i]);
+}
+
+function Moments(title) { 
 	//-- Moments
 	selectWindow(filelist[i]);
 	run("Duplicate...", "title=Proc duplicate");
 	selectWindow("Proc");
 	setAutoThreshold("Moments");
-	//setThreshold(0, 20);
+	//setThreshold(0, 20); // can be changed 
 	run("Convert to Mask", "method=Moments background=Light");
 	run("Invert", "stack");
-	saveAs("Tiff", outputFolder + "Moments0-20_" + filelist[i]); 
+	saveAs("Tiff", outputFolder + "Moments_" + filelist[i]); 
 	run("Z Project...", "projection=[Max Intensity]");
-	saveAs("Jpeg", outputFolderMIPs + "MAX_Moments0-20_" + filelist[i]);
-	close();
-	close();
-	
+	saveAs("Jpeg", outputFolderMIPs + "MAX_Moments_" + filelist[i]);
+	close("MAX_Moments_" + filelist[i]);
+	close("Moments_" + filelist[i]);
+}
+
+function Percentile(title) {
 	//-- Percentile
 	selectWindow(filelist[i]);
 	run("Duplicate...", "title=Proc duplicate");
 	selectWindow("Proc");
 	setAutoThreshold("Percentile");
-	//setThreshold(0, 15);
+	//setThreshold(0, 15); // can be changed 
 	run("Convert to Mask", "method=Percentile background=Light");
 	run("Invert", "stack");
-	saveAs("Tiff", outputFolder + "Perc0-15_" + filelist[i]); 
+	saveAs("Tiff", outputFolder + "Perc_" + filelist[i]); 
 	run("Z Project...", "projection=[Max Intensity]");
-	saveAs("Jpeg", outputFolderMIPs + "MAX_Perc0-15_" + filelist[i]);
-	close();
-	close();
+	saveAs("Jpeg", outputFolderMIPs + "MAX_Perc_" + filelist[i]);
+	close("MAX_Perc_" + filelist[i]);
+	close("Perc_" + filelist[i]);
+}
 	
+function MaxEntropy(title) {
 	//-- MaxEntropy
 	selectWindow(filelist[i]);
 	run("Duplicate...", "title=Proc duplicate");
 	selectWindow("Proc");
 	setAutoThreshold("MaxEntropy");
-	//setThreshold(0, 30);
+	//setThreshold(0, 30); // can be changed 
 	run("Convert to Mask", "method=MaxEntropy background=Light");
 	run("Invert", "stack");
-	saveAs("Tiff", outputFolder + "MaxEntro0-30_" + filelist[i]); 
+	saveAs("Tiff", outputFolder + "MaxEntro_" + filelist[i]); 
 	run("Z Project...", "projection=[Max Intensity]");
-	saveAs("Jpeg", outputFolderMIPs + "MAX_MaxEntro0-30_" + filelist[i]);
-	close();
-	close();
+	saveAs("Jpeg", outputFolderMIPs + "MAX_MaxEntro_" + filelist[i]);
+	close("MaxEntro_" + filelist[i]);
+	close("MAX_MaxEntro_" + filelist[i]);
 }
