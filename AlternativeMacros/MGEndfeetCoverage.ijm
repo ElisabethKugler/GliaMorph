@@ -85,13 +85,13 @@ for (e=0; e< filelistMGs.length; e++) {
 		
 		// smoothen and enhance before segmenting with Threshold
 		run("Median...", "radius=2 stack");
-
-		
+		// local contrast enhancement
 		run("Enhance Local Contrast (CLAHE)", "blocksize=127 histogram=256 maximum=3 mask=*None* fast_(less_accurate)");
+		
 		// segmentation with Otsu Threshold
 		run("Threshold...");
 		setAutoThreshold("Otsu dark");
-		setThreshold(40, 255);
+		setThreshold(40, 255); //  this can be changed
 		setOption("BlackBackground", false);
 		run("Convert to Mask", "method=Otsu background=Light calculate");
 	

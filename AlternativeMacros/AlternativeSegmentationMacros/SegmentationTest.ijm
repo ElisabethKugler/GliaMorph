@@ -93,7 +93,7 @@ function SimpleSeg(title){
 	close();
 	selectWindow("Bin");
 	run("Invert", "stack");
-	// need to make binary - ToDo
+	
 	saveAs("Tiff", outputFolder + "3DSimpleSeg_" + filelist[i]); 
 	run("Z Project...", "projection=[Max Intensity]");
 	saveAs("Jpeg", outputFolderMIPs + "MAX_3DSimpleSeg20-0_" + filelist[i]);
