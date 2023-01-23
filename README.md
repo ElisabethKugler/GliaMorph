@@ -2,8 +2,9 @@
 
 GliaMorph Toolkit to process and analyse Müller glia morphology (implemented as Fiji Macros to allow modular application).
 
-Publication: Elisabeth Kugler, Isabel Bravo, Xhuljana Durmishi, Stefania Marcotti, Sara Beqiri, Alicia Carrington, Brian M. Stramer, Pierre Mattar, Ryan B. MacDonald; GliaMorph: A modular image analysis toolkit to quantify Müller glial cell morphology. Development 2023; dev.201008. doi: https://doi.org/10.1242/dev.201008;
-Step-by-step protocol: Kugler, E., Breitenbach, E.-M., & MacDonald, R. (2023). Glia cell morphology analysis using the fiji gliaMorph toolkit. Current Protocols, 3, e654. doi: 10.1002/cpz1.654; https://currentprotocols.onlinelibrary.wiley.com/doi/10.1002/cpz1.654
+**Publication:** Elisabeth Kugler, Isabel Bravo, Xhuljana Durmishi, Stefania Marcotti, Sara Beqiri, Alicia Carrington, Brian M. Stramer, Pierre Mattar, Ryan B. MacDonald; GliaMorph: A modular image analysis toolkit to quantify Müller glial cell morphology. Development 2023; dev.201008. doi: https://doi.org/10.1242/dev.201008;
+
+**Step-by-step protocol:** Kugler, E., Breitenbach, E.-M., & MacDonald, R. (2023). Glia cell morphology analysis using the fiji gliaMorph toolkit. Current Protocols, 3, e654. doi: 10.1002/cpz1.654; https://currentprotocols.onlinelibrary.wiley.com/doi/10.1002/cpz1.654
 <br/>
 
 Example Data: **Data Link**: https://zenodo.org/record/5747597 **DATA DOI**: 10.5281/zenodo.5747597
