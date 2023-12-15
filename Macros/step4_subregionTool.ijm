@@ -234,12 +234,15 @@ function zReduction(title) {
 		SubStackSlices = slices;
 		print(filelist[i] + "not enough slices for substack");
 	}
+
+// startslices = slices - SubStackSlices
 	
 	if (channels == 1) {
 		run("Make Substack...", "  slices=1-" + SubStackSlices);
 	}else{
 		run("Make Substack...", "channels=1-" + channels + " slices=1-" + SubStackSlices);			
 	}
+	
 	saveAs("Tiff", zDir + "z-reduced_" + filelist[i]); 
 
 	// make and save MIP
